@@ -1,51 +1,3 @@
-# from django.db import models
-
-# # Create your models here.
-
-
-# class Users(models.Model):
-#     USER_TYPE_CHOICES = (
-#         ("Admin", "Admin"),
-#         ("Student", "Student"),
-#         ("Teacher", "Teacher"),
-#         ("Staff", "Staff"),
-#     )
-
-#     name = models.CharField(max_length=100)
-#     user_type = models.CharField(max_length=100, choices=USER_TYPE_CHOICES)
-#     email = models.EmailField()
-#     password = models.CharField(max_length=100)
-
-#     class Meta:
-#         abstract = True
-
-#     def __str__(self):
-#         return self.name
-
-
-# class Course(models.Model):
-#     name = models.CharField(max_length=100)
-
-#     def __str__(self):
-#         return self.name
-
-
-# class Student(Users):
-#     SEMESTER_CHOICES = (
-#         (1, "1st"),
-#         (2, "2nd"),
-#         (3, "3rd"),
-#         (4, "4th"),
-#         (5, "5th"),
-#         (6, "6th"),
-#         (7, "7th"),
-#         (8, "8th"),
-#     )
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-#     semester = models.IntegerField(choices=SEMESTER_CHOICES)
-#     user_type = models.CharField(
-#         max_length=100, choices=Users.USER_TYPE_CHOICES, default="Student"
-#     )
 
 
 from django.contrib.auth.models import User
@@ -69,8 +21,8 @@ class Administration(User):
     user_type = models.CharField(max_length=100, choices=USER_TYPE_CHOICES)
     
     class Meta:
-        verbose_name = 'Staff,Admin,Teacher Profile'
-        verbose_name_plural = 'Staff,Admin,Teacher Profile'
+        verbose_name = 'Administration'
+        verbose_name_plural = 'Administration'
 
     def __str__(self):
         return self.username
@@ -100,18 +52,7 @@ class Student(User):
     def __str__(self):
         return self.user_profile.user.username
 
-
-class MenuItem(models.Model):
-    name = models.CharField(max_length=100)
-    # description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    available = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-class MenuSchedule(models.Model):
-    DAYS_OF_WEEK = [
+DAYS_OF_WEEK = [
         ('SU', 'Sunday'),
         ('MO', 'Monday'),
         ('TU', 'Tuesday'),
@@ -120,31 +61,52 @@ class MenuSchedule(models.Model):
         ('FR', 'Friday'),
         ('SA', 'Saturday'),
     ]
+
+class MenuItem(models.Model):
+    name = models.CharField(max_length=100)
+    # description = models.TextField(blank=True, null=True)
+    price = models.IntegerField( )
+    available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+class MenuSchedule(models.Model):
     day_of_week = models.CharField(max_length=2, choices=DAYS_OF_WEEK)
-    menu_items = models.ManyToManyField(MenuItem)
+    menu_items = models.ManyToManyField(MenuItem,  related_name='menu_items',)
+    sequence= models.PositiveIntegerField(default=0)
     class Meta:
-        ordering = ['day_of_week']
+        ordering = ['sequence']
 
     def __str__(self):
         return self.get_day_of_week_display()
 
-class Order(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+class Orders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
-    # order_date = models.DateField(auto_now_add=True)
     order_date = models.DateField(auto_now=True)
+    order_time = models.TimeField()
     quantity = models.PositiveIntegerField(default=1)
+    status = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+        ordering=['order_date']
 
     def __str__(self):
-        return f'{self.user.user.username} - {self.menu_item.name}'
-        pass
+        return f'{self.user.username} - {self.menu_item.name}'
 
 class BreakTime(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     semester=models.IntegerField(choices=SEMESTER_CHOICES)
     start_time = models.TimeField()
     end_time = models.TimeField()
+    
+    class Meta:
+        verbose_name = 'Break Time'
+        verbose_name_plural = 'Break Times'
+        ordering=['semester']
 
     def __str__(self):
-        return f'{self.start_time} - {self.end_time}'
-        pass
+        return f'{self.course} - semseter:{self.semester}'

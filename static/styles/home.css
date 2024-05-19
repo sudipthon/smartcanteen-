@@ -1,0 +1,170 @@
+
+.navbar {
+    background-color: lightcyan;
+    width: 180px;
+    position: fixed;
+    height: 100%;
+    left: auto;
+    top: 0;
+    right: 0;
+}
+
+.navbar nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.navbar nav ul li {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.navbar nav ul li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar nav ul li a:hover {
+    background-color: #f2f2f2;
+}
+
+.navbar nav ul li #brand {
+    flex-direction: column;
+}
+
+#logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.menu {
+    background-color: #f2f2f2;
+    /* padding: 20px; */
+    margin-top: 20px;
+    height: 100%;
+    width: 100%;
+}
+
+table {
+    width: 100%; 
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table tr:hover {
+    background-color: #f9f9f9;
+}
+#availability{
+    height: 20px;
+}
+
+
+
+
+
+
+
+/* login */
+
+
+
+
+
+
+
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(../image/logo.png);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.form{
+    width: 90%;
+    max-width: 450px;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 50px 60px 70px;
+    text-align: center;
+}
+
+.form h1{
+    font-size: 30px;
+    margin-bottom: 60px;
+    color: oldlace;
+    position: relative;
+}
+.form h1::after{
+    content: '';
+    width: 30px;
+    height: 4px;
+    background: slateblue;
+    border-radius: 3px;
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.input-field{
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    margin: 15px 0; 
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+input{
+    width: 100%;
+    padding: 18px;
+    border: 0;
+    background: transparent;
+    outline: 0;
+    color: #fff;
+}
+.input-field i{
+    margin-left: 15px;
+    color: #999;
+}
+
+.btn-field{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.btn-field button{
+   flex-basis: 48%;
+   background: slateblue;
+    color: #fff;
+    height: 40px;
+    border: 0;
+    border-radius: 20px;
+    cursor: pointer;
+    outline: 0;
+    transition:1s;
+}
+

@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="menu">
+    <h2>Food Menu</h2>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Price/Plate</th>
+            <th>Availabel</th>
+            <th>Order</th>
+        </tr>
+        {% for item in menu %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            {% if item.avaiable %}
+            <td><img id="availability" src="{%static 'icons/wright.png'%}" alt=""></td>
+            {% else %}
+            <td><img id="availability" src="{%static 'icons/wrong.png'%}" alt=""></td>
+            {% endif %}
+            
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+{% endblock %}

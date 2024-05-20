@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogIn Page</title>
-    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
     <script src="https://kit.fontawesome.com/3327f8157b.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="container">
-        <div class="form">
+        <div class="form" >
             <h1>LogIn</h1>
-            <form action="">
+            <form action=""  method="POST">
+                {% csrf_token %}
                 <div class="input-group">
                     <div class="input-field">
                         <i class="fa-solid fa-user"></i>
-                        <input type="text" placeholder="Username">    
+                        <input type="text" placeholder="Username" name="username">
                     </div>
                     <div class="input-field">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" placeholder="Password">    
+                        <input type="password" placeholder="Password" name="password">
                     </div>
                     <div class="btn-field">
                         <button type="submit">Log in</button>
@@ -29,6 +32,7 @@
             </form>
         </div>
     </div>
-    
+
 </body>
+
 </html>

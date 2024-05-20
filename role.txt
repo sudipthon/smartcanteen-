@@ -4,7 +4,7 @@ prawesh
 prawesh@gmail.com
 prawesh
 
-Admin
+sudperuser
 sudip
 sudip@gmail.com
 sudip
@@ -13,9 +13,16 @@ sudip
 Student
 nisha
 nisha@gmail.com
-nisha
+9864student
 
 Staff
 panauti
 panauti@gmail.com
-panauti
+9864panauti
+
+
+Admin
+shushma
+shushma@gmail.com
+9864admin
+

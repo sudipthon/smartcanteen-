@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block content %}
+<div>
+    {{day_of_week}} {{current_time}}
 
+</div>
 <div class="menu">
     <h2>Food Menu</h2>
     <table>
@@ -16,12 +19,17 @@
         <tr>
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
-            {% if item.avaiable %}
-            <td><img id="availability" src="{%static 'icons/wright.png'%}" alt=""></td>
-            {% else %}
-            <td><img id="availability" src="{%static 'icons/wrong.png'%}" alt=""></td>
-            {% endif %}
+            {% if item.available %}
+            <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt=""></td>
             
+            <td>
+                <button>Order</button>
+            </td>
+            {% else %}
+            <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt=""></td>
+            {% endif %}
+         
+
         </tr>
         {% endfor %}
 

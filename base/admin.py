@@ -5,8 +5,8 @@ from .models import *
 
 # class Inlin
 
-class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'role', 'course', 'semester')
+# class UserProfileAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'role', 'course', 'semester')
     
 class OrdersAdmin(admin.ModelAdmin):
     list_display = ('user', 'menu_item', 'order_date',  )

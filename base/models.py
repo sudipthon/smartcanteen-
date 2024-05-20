@@ -5,19 +5,20 @@ from django.db import models
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
 
     def __str__(self):
         return self.name
 
+# class Administration(User):
+class Administration(models.Model):
 
-class Administration(User):
     USER_TYPE_CHOICES = (
         ("Admin", "Admin"),
         ("Teacher", "Teacher"),
         ("Staff", "Staff"),
     )
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_type = models.CharField(max_length=100, choices=USER_TYPE_CHOICES)
     
     class Meta:
@@ -25,7 +26,7 @@ class Administration(User):
         verbose_name_plural = 'Administration'
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 
 SEMESTER_CHOICES = (   
@@ -38,8 +39,9 @@ SEMESTER_CHOICES = (
         (7, "7th"),
         (8, "8th"),
     )
-class Student(User):
-    # user= models.OneToOneField(User, on_delete=models.CASCADE)
+# class Student(User):
+class Student(models.Model):
+    user= models.OneToOneField(User, on_delete=models.CASCADE)
     semester = models.IntegerField(choices=SEMESTER_CHOICES)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     user_type = models.CharField(
@@ -50,7 +52,8 @@ class Student(User):
         verbose_name_plural = 'Students'
 
     def __str__(self):
-        return self.user_profile.user.username
+        return self.user.username
+ 
 
 DAYS_OF_WEEK = [
         ('SU', 'Sunday'),

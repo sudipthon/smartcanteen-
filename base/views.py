@@ -58,4 +58,4 @@ def register(request):
             user.user_type = user_type
             user.save()
         return redirect("login")
-    return render(request, "register/register.html")
+    return render(request, "register/signup.html")

@@ -17,10 +17,10 @@
                             <h2>
                                 Smart Canteen
                             </h2>
-                            <img id="logo" src="../image/logo1.png" alt="">
+                            <img id="logo" src= "{%static 'images/icons/image.png'%}"  alt="">
                         </div>
                     </li>
-                    <li><a href="admin.html">Home</a></li>
+                    <li><a href="{% url 'orders.html' %}">Home</a></li>
                     <li><a href="admin.html">Profile</a></li>
                     <li><a href="admin.html">Settings</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

@@ -44,12 +44,19 @@
     /* padding: 20px; */
     margin-top: 20px;
     height: 100%;
-    width: 100%;
+    width: 80%;
 }
 
 table {
-    width: 100%; 
+    width: 80%; 
     border-collapse: collapse;
+}
+table td input {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 15%;
 }
 
 table th, table td {
@@ -131,8 +138,8 @@ table tr:hover {
 }
 
 .input-field{
-    background: transparent;
-    border: 2px solid rgba(255,255,255,0.2);
+    background: transparen;
+    border: 2px solid rgba(0, 0, 0, 0.2);
     margin: 15px 0; 
     border-radius: 10px;
     display: flex;
@@ -142,9 +149,9 @@ input{
     width: 100%;
     padding: 18px;
     border: 0;
-    background: transparent;
+    background: white;
     outline: 0;
-    color: #fff;
+    color: black;
 }
 .input-field i{
     margin-left: 15px;

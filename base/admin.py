@@ -15,8 +15,8 @@ class OrdersAdmin(admin.ModelAdmin):
     
 admin.site.register(Course)
 admin.site.register(Student)
-admin.site.register(MenuSchedule)
+admin.site.register(Menu)
 admin.site.register(Orders, OrdersAdmin)
-admin.site.register(MenuItem)
+admin.site.register(FoodItem)
 admin.site.register(Administration)
 admin.site.register(BreakTime)

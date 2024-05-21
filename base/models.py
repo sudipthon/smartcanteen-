@@ -65,7 +65,7 @@ DAYS_OF_WEEK = [
         ('SA', 'Saturday'),
     ]
 
-class MenuItem(models.Model):
+class FoodItem(models.Model):
     name = models.CharField(max_length=100)
     # description = models.TextField(blank=True, null=True)
     price = models.IntegerField( )
@@ -74,9 +74,9 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.name
 
-class MenuSchedule(models.Model):
+class Menu(models.Model):
     day_of_week = models.CharField(max_length=2, choices=DAYS_OF_WEEK)
-    menu_items = models.ManyToManyField(MenuItem,  related_name='menu_items',)
+    menu_items = models.ManyToManyField(FoodItem,  related_name='menu_items',)
     sequence= models.PositiveIntegerField(default=0)
     class Meta:
         ordering = ['sequence']
@@ -86,11 +86,11 @@ class MenuSchedule(models.Model):
 
 class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
     order_date = models.DateField(auto_now=True)
     order_time = models.TimeField()
     quantity = models.PositiveIntegerField(default=1)
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = 'Order'
@@ -101,7 +101,7 @@ class Orders(models.Model):
         return f'{self.user.username} - {self.menu_item.name}'
 
 class BreakTime(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_breaktimes')
     semester=models.IntegerField(choices=SEMESTER_CHOICES)
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -112,4 +112,4 @@ class BreakTime(models.Model):
         ordering=['semester']
 
     def __str__(self):
-        return f'{self.course} - semseter:{self.semester}'
+        return f'{self.course} - semester:{self.semester}'

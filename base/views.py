@@ -119,16 +119,17 @@ def staff_dashboard(request):
     return render(request, "dashboards/staff.html", context)
 
 @login_required(login_url="login")
-def update_menu(request):
+def update_fooditem(request,pk):
     if request.method == "POST":
-        day = request.POST.get("day")
-        menu_items = request.POST.getlist("menu_items")
-        menu = Menu.objects.get(day_of_week=day)
-        menu.menu_items.clear()
-        for item in menu_items:
-            menu.menu_items.add(item)
-        menu.save()
-    return redirect("staff")
+        item=FoodItem.objects.get(pk=pk)
+        item.name=request.POST.get('name')
+        item.price=request.POST.get('price')
+        item.available=bool(request.POST.get('available'))
+        item.save()
+        return redirect('staff')
+    return redirect('staff')
+        
+    
 
 @login_required(login_url="login")
 def list_orders(request):

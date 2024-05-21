@@ -43,25 +43,30 @@
                 <th>Action</th>
             </tr>
             {% for item in food_item %}
-            <form action="#"></form>
-            <tr>
-                <td>{{item.name}}</td>
-                <td>
-                    <input type="number" name="price" value="{{item.price}}" id="">
-                </td>
-                {% if item.available %}
-                <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt="">
-                    <input type="checkbox" name="available" checked>
-                </td>
+            <form action="{% url 'update_fooditem' item.id %}" method="POST">
+                {% csrf_token %}
 
-                {% else %}
-                <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt="">
-                    <input type="checkbox" name="available"></input>
-                </td>
+                <tr>
+                    <td>
+                        <input type="text" name="name" value="{{item.name}}" id="" style="padding: 2px 5px;">
+                    </td>
+                    <td>
+                        <input type="number" name="price" value="{{item.price}}" id="">
+                    </td>
+                    {% if item.available %}
+                    <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt="">
+                        <input type="checkbox" name="available" checked>
+                    </td>
 
-                {% endif %}
-                <td><button>Update</button></td>
-            </tr>
+                    {% else %}
+                    <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt="">
+                        <input type="checkbox" name="available"></input>
+                    </td>
+
+                    {% endif %}
+                    <td><button>Update</button></td>
+                </tr>
+            </form>
             {% endfor %}
 
         </table>

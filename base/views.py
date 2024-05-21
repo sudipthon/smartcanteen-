@@ -12,6 +12,7 @@ from collections import defaultdict
 
 
 # Create your views here.
+@login_required(login_url="login")
 def home(request):
     time_zone = timezone.now()
     # print("Time Zone: ", time_zone)
@@ -28,6 +29,9 @@ def home(request):
     }
     return render(request, "home.html", context)
 
+def logout_view(request):
+    logout(request)
+    return redirect("login")
 
 def login_view(request):
     if request.method == "POST":

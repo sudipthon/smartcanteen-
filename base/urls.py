@@ -5,6 +5,9 @@ urlpatterns = [
     path("", home, name="home"),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    
+    path("delete_order/",delete_order,name="delete_order"),
+    
     path("admin/", admin_dashboard, name="canteen_admin"),
     path("update_breaktime/<int:pk>", update_breaktime, name="update_breaktime"),
     path("create_breaktime/", create_breaktime, name="create_breaktime"),

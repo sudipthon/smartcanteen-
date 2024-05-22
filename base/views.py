@@ -22,16 +22,21 @@ def home(request):
 
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
     menu_items = day_menu.menu_items.all()
+    my_orders = Orders.objects.filter(user=request.user)
+    # return HttpResponse(my_order)
     context = {
         "menu": menu_items,
         "current_time": time_zone,
         "day_of_week": day_of_week,
+        "my_orders": my_orders,
     }
     return render(request, "home.html", context)
+
 
 def logout_view(request):
     logout(request)
     return redirect("login")
+
 
 def login_view(request):
     if request.method == "POST":
@@ -54,6 +59,13 @@ def login_view(request):
             return HttpResponse("Invalid Credentials")
     return render(request, "login/login.html")
 
+
+def delete_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    order.delete()
+    return redirect("home")
+
+
 @login_required(login_url="login")
 def admin_dashboard(request):
     courses = Course.objects.all()
@@ -62,15 +74,20 @@ def admin_dashboard(request):
 
     return render(request, "dashboards/admin.html", context)
 
+
 @login_required(login_url="login")
 def create_breaktime(request):
     if request.method == "POST":
-        name = request.POST.get('course')
+        name = request.POST.get("course")
         course = Course.objects.create(name=name)
-        breaktimes = [BreakTime(course=course, semester=i,start_time='7:00',end_time='8:00') for i in range(1, 9)]
+        breaktimes = [
+            BreakTime(course=course, semester=i, start_time="7:00", end_time="8:00")
+            for i in range(1, 9)
+        ]
         BreakTime.objects.bulk_create(breaktimes)
-        return redirect('canteen_admin')
-    
+        return redirect("canteen_admin")
+
+
 @login_required(login_url="login")
 def update_breaktime(request, pk):
     if request.method == "POST":
@@ -89,10 +106,11 @@ def update_breaktime(request, pk):
 
     return redirect("canteen_admin")
 
+
 @login_required(login_url="login")
 def delete_breaktime(request, pk):
     if request.method == "POST":
-        course=Course.objects.get(id=pk)
+        course = Course.objects.get(id=pk)
         try:
             breaktime = BreakTime.objects.filter(course=course)
             breaktime.delete()
@@ -101,6 +119,7 @@ def delete_breaktime(request, pk):
             course.delete()
             return redirect("canteen_admin")
     return redirect("canteen_admin")
+
 
 @login_required(login_url="login")
 def staff_dashboard(request):
@@ -118,18 +137,18 @@ def staff_dashboard(request):
 
     return render(request, "dashboards/staff.html", context)
 
+
 @login_required(login_url="login")
-def update_fooditem(request,pk):
+def update_fooditem(request, pk):
     if request.method == "POST":
-        item=FoodItem.objects.get(pk=pk)
-        item.name=request.POST.get('name')
-        item.price=request.POST.get('price')
-        item.available=bool(request.POST.get('available'))
+        item = FoodItem.objects.get(pk=pk)
+        item.name = request.POST.get("name")
+        item.price = request.POST.get("price")
+        item.available = bool(request.POST.get("available"))
         item.save()
-        return redirect('staff')
-    return redirect('staff')
-        
-    
+        return redirect("staff")
+    return redirect("staff")
+
 
 @login_required(login_url="login")
 def list_orders(request):
@@ -200,6 +219,7 @@ def list_orders(request):
     context = {"orders": orders_dict}
 
     # return render(request, "dashboards/orders.html", context)
+
 
 @login_required(login_url="login")
 def create_order(request, pk):

@@ -38,4 +38,37 @@
 
     </table>
 </div>
+
+<br><br><br>
+<div class="menu">
+    <h2>My Orders</h2>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Price/Plate</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+
+        </tr>
+        {% for order in my_orders %}
+        {% csrf_token %}
+
+        <tr>
+            <td>{{ order.menu_item.name }}</td>
+            <td>{{ order.menu_item.price }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{order.total_cost}}</td>
+            <td>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+
+
+
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
 {% endblock %}

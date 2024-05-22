@@ -57,11 +57,15 @@
         <tr>
             <td>{{ order.menu_item.name }}</td>
             <td>{{ order.menu_item.price }}</td>
-            <td>{{ order.quantity }}</td>
-            <td>{{order.total_cost}}</td>
-            <td>
-                <button>Edit</button>
-                <button>Delete</button>
+            <form action="{% url 'update_order' order.id %}" method="POST">
+                {% csrf_token %}
+
+                <td> <input type="number" name="quantity" id="" value="{{order.quantity}}"></td>
+                <td>{{order.total_cost}}</td>
+                <td>
+                    <button type="submit"> Update</button>
+            </form>
+            <button> <a href="{% url 'delete_order' order.id%} "> Delete</a></button>
             </td>
 
 

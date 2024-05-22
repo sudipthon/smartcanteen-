@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pytz
-
+from. decorators import *
 # python imports
 from itertools import groupby
 from operator import attrgetter
@@ -13,17 +13,15 @@ from collections import defaultdict
 
 # Create your views here.
 @login_required(login_url="login")
+@check_student_teacher
 def home(request):
     time_zone = timezone.now()
-    # print("Time Zone: ", time_zone)
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
-    # print("Current Time: ", current_time)
 
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
     menu_items = day_menu.menu_items.all()
     my_orders = Orders.objects.filter(user=request.user)
-    # return HttpResponse(my_order)
     context = {
         "menu": menu_items,
         "current_time": time_zone,
@@ -65,8 +63,20 @@ def delete_order(request, pk):
     order.delete()
     return redirect("home")
 
+def update_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    if request.method == "POST":
+        quantity = request.POST.get("quantity")
+        order.quantity = quantity
+        order.save()
+        return redirect("home")
+    # return render(request, "edit_order.html", {"order": order})
 
+
+
+# ########Admin
 @login_required(login_url="login")
+@check_admin
 def admin_dashboard(request):
     courses = Course.objects.all()
     breaktime = BreakTime.objects.all()
@@ -74,7 +84,7 @@ def admin_dashboard(request):
 
     return render(request, "dashboards/admin.html", context)
 
-
+@check_admin
 @login_required(login_url="login")
 def create_breaktime(request):
     if request.method == "POST":
@@ -121,7 +131,12 @@ def delete_breaktime(request, pk):
     return redirect("canteen_admin")
 
 
+
+
+########Staff
+
 @login_required(login_url="login")
+@check_staff
 def staff_dashboard(request):
     food_item = FoodItem.objects.all()
     time_zone = timezone.now()
@@ -139,6 +154,7 @@ def staff_dashboard(request):
 
 
 @login_required(login_url="login")
+@check_staff
 def update_fooditem(request, pk):
     if request.method == "POST":
         item = FoodItem.objects.get(pk=pk)
@@ -151,6 +167,7 @@ def update_fooditem(request, pk):
 
 
 @login_required(login_url="login")
+@check_staff
 def list_orders(request):
     breaktime_start_times = BreakTime.objects.all().values_list("start_time", flat=True)
     orders = Orders.objects.filter(order_time__in=breaktime_start_times).order_by(

@@ -77,10 +77,12 @@ def update_order(request, pk):
 # ########Admin
 @login_required(login_url="login")
 @check_admin
-def admin_dashboard(request):
+def admin_dashboard(request,pk=None):
     courses = Course.objects.all()
-    breaktime = BreakTime.objects.all()
-    context = {"courses": courses, "breaktime": breaktime}
+    if pk != None:
+        course=Course.objects.get(id=pk)
+        return render(request, "dashboards/semesters.html",{'course':course})
+    context = {"courses": courses}
 
     return render(request, "dashboards/admin.html", context)
 
@@ -96,6 +98,7 @@ def create_breaktime(request):
         ]
         BreakTime.objects.bulk_create(breaktimes)
         return redirect("canteen_admin")
+   
 
 
 @login_required(login_url="login")
@@ -113,6 +116,7 @@ def update_breaktime(request, pk):
         breaktime.semester = int(semester)
         breaktime.course = course
         breaktime.save()
+        
 
     return redirect("canteen_admin")
 

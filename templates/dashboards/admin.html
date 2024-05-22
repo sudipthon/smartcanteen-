@@ -27,56 +27,37 @@
                 </ul>
             </nav>
         </div>
-        <div class="routine">
-            <h2>Routine</h2>
-            {% for course in courses%}
+        <center>
 
-            <div>
-
+            <div class="routine">
+                <h2>Courses</h2>
                 <table>
                     <tr>
-                        <th>
 
-                            <h3>
-
-                                {{course.name}}
-                            </h3>
-                        </th>
-                        <form method="POST" action="{% url 'delete_breaktime' course.id %}">
-                            {% csrf_token %}
-                            <th>
-                                <button type="submit">Delete</button>
-                            </th>
-                        </form>
-                    </tr>
-                    <tr>
-                        <th>Semester</th>
-                        <th>Break Time</th>
+                        <th>Course</th>
                         <th>Action</th>
-                    </tr>
-                    {% for breakroutine in course.course_breaktimes.all %}
-                    <form action="{% url 'update_breaktime' breakroutine.id %}" method="POST">
-                        {% csrf_token %}
-                        <input type="number" name="semester" value="{{breakroutine.semester}}" id="" hidden>
-                        <input type="text" name="course" value="{{course.name}}" id="" hidden>
-                        <tr>
-                            <td>{{breakroutine.semester}}</td>
-                            <td>
-                                <input type="time" name="start_time" value="{{breakroutine.start_time|date:'H:i'}}">
-                                <input type="time" name="end_time" value="{{breakroutine.end_time|date:'H:i'}}">
 
-                            </td>
-                            <td><button type="submit">Update</button></td>
-                        </tr>
-                    </form>
+                    </tr>
+                    {% for course in courses%}
+                    <tr>
+
+                        <td>
+
+                            {{course.name}}
+                        </td>
+                        <td>
+                            <a href="{% url 'canteen_admin' course.id %}">
+
+                                Breaktimes
+                            </a>
+                        </td>
+                    </tr>
                     {% endfor %}
 
                 </table>
-            </div>
-            <br><br><br>
 
-            {% endfor %}
-        </div>
+            </div>
+        </center>
     </div>
     <center>
 
@@ -90,7 +71,7 @@
 
         </div>
     </center>
-<br><br><br>
+    <br><br><br>
 
 </body>
 

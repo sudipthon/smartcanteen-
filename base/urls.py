@@ -12,4 +12,6 @@ urlpatterns = [
     path("staff/", staff_dashboard, name="staff"),
     path("orders/", list_orders, name="list_orders"),
     path("order/<int:pk>/", create_order, name="create_order"),
+    
+    path('update_fooditem/<int:pk>/', update_fooditem, name='update_fooditem'),
 ]

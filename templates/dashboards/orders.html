@@ -5,47 +5,65 @@
 <head>
     <title>Orders</title>
     <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
+    <style>
+        .active {
+            background-color: rgb(48, 201, 248);
+        }
+    </style>
 </head>
-
 <body>
     <div class="main">
-        <div class="navbar">
-            <nav>
-                <ul>
-                    <li id="brand">
-                        <div id="brand">
-                            <h2>
-                                Smart Canteen
-                            </h2>
-                            <img id="logo" src="../image/logo1.png" alt="">
-                        </div>
-                    </li>
-                    <li><a href="admin.html">Home</a></li>
-                    <li><a href="admin.html">Profile</a></li>
-                    <li><a href="admin.html">Settings</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </nav>
+ 
+            <div class="navbar">
+                <nav>
+                    <ul>
+                        <li id="brand">
+                            <div id="brand">
+    
+                              <h2>
+    
+                                    Smart Canteen
+                                </h2>
+                                <img id="logo" src="../image/logo1.png" alt="">
+                            </div>
+                        </li>
+                        <li><a class="{% if request.path == '/staff/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                        </li>
+    
+                        <li><a class="{% if request.path == '/update_day_menu/' %}active{% endif %}"
+                                href="{%url 'week_menu'%}">Week Menu</a></li>
+                        <li><a class="{% if request.path == '/orders/' %}active{% endif %}"
+                            href="{% url 'list_orders' %}">Orders</a></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
         <div class="routine">
             <h2>Orders</h2>
-                <div>
-                    {% for order in orders %}
-                    <h3>{{  }}</h3>
-                    <table>
-                        <tr>
-                            <th>Item</th>
-                            <th>Quantity Ordered</th>
-                            <th>Total price</th>
-                        </tr>
-                            <tr>
-                                <td>{{ menu_item.name }}</td>
-                                <td>{{ order_info.quantity }}</td>
-                                <td>{{ order_info.total_price }}</td>
-                            </tr>
-                    </table>
+            <br><br>
+            {% for time,items in orders.items%}
+            <div>
+                <h3> {{time}}</h3>
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity Ordered</th>
+                        <th>Total price</th>
+                    </tr>
+                    <tr>
+                        {% for item_name,info in items.items %}
+                        <td> {{item_name}} </td>
+                        <td> {{info.quantity}} </td>
+                        <td> {{info.price}} </td>
+                    </tr>
                     {% endfor %}
-                </div>
+                </table>
+            </div>
+
+            <br><br><br><br>
+            {% endfor %}
+
         </div>
     </div>
 

@@ -24,7 +24,18 @@
                             <img id="logo" src= "{%static 'images/icons/image.png'%}" alt="">
                         </div>
                     </li>
-                    <li><a href="{%url 'staff'%}">Day Menu</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Day Menu</a>
+                        <div class="dropdown-content">
+                            <a href="">Sunday</a>
+                            <a href="">Monday</a>
+                            <a href="">Tuesday</a>
+                            <a href="">Wednesday</a>
+                            <a href="">Thursday</a>
+                            <a href="">Friday</a>
+                            <a href="">Saturday</a>
+                        </div>
+                    </li>
                     <li><a href="{% url 'list_orders' %}">Orders</a></li>
                     <li><a href="user.html">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

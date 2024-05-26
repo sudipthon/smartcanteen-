@@ -85,18 +85,20 @@ class Menu(models.Model):
         return self.get_day_of_week_display()
 
 class Orders(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,)
     menu_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
     order_date = models.DateField(auto_now=True)
     order_time = models.TimeField()
     quantity = models.PositiveIntegerField(default=1)
     status = models.BooleanField(default=False)
-    
+
     class Meta:
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
         ordering=['order_date']
 
+    def total_cost(self):
+        return self.menu_item.price * self.quantity
     def __str__(self):
         return f'{self.user.username} - {self.menu_item.name}'
 

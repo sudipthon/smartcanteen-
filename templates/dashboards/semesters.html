@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="navbar">
+            <nav>
+                <ul>
+                    <li id="brand">
+                        <div id="brand">
+                            <h2>
+                                Smart Canteen
+                            </h2>
+                            <img id="logo" src="../image/logo1.png" alt="">
+                        </div>
+                    </li>
+                    <li><a href="admin.html">Home</a></li>
+                    <li><a href="admin.html">Profile</a></li>
+                    <li><a href="admin.html">Settings</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="routine">
+            <h2>Routine</h2>
+
+            <div>
+
+                <table>
+                    <tr>
+                        <th>
+
+                            <h3>
+
+                                {{course.name}}
+                            </h3>
+                        </th>
+                        <form method="POST" action="{% url 'delete_breaktime' course.id %}">
+                            {% csrf_token %}
+                            <th>
+                                <button type="submit">Delete</button>
+                            </th>
+                        </form>
+                    </tr>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Break Time</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for breakroutine in course.course_breaktimes.all %}
+                    <form action="{% url 'update_breaktime' breakroutine.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="number" name="semester" value="{{breakroutine.semester}}" id="" hidden>
+                        <input type="text" name="course" value="{{course.name}}" id="" hidden>
+                        <tr>
+                            <td>{{breakroutine.semester}}</td>
+                            <td>
+                                <input type="time" name="start_time" value="{{breakroutine.start_time|date:'H:i'}}">
+                                <input type="time" name="end_time" value="{{breakroutine.end_time|date:'H:i'}}">
+
+                            </td>
+                            <td><button type="submit">Update</button></td>
+                        </tr>
+                    </form>
+                    {% endfor %}
+
+                </table>
+            </div>
+            <br><br><br>
+
+        </div>
+    </div>
+
+<br><br><br>
+
+</body>
+
+</html>

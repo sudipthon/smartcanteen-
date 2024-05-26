@@ -4,7 +4,14 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pytz
-from. decorators import *
+from django.db.models import Count
+
+from django.db.models import Count, Sum
+
+# local imports
+from .forms import *
+from .decorators import *
+
 # python imports
 from itertools import groupby
 from operator import attrgetter
@@ -63,6 +70,7 @@ def delete_order(request, pk):
     order.delete()
     return redirect("home")
 
+
 def update_order(request, pk):
     order = Orders.objects.get(pk=pk)
     if request.method == "POST":
@@ -73,18 +81,18 @@ def update_order(request, pk):
     # return render(request, "edit_order.html", {"order": order})
 
 
-
 # ########Admin
 @login_required(login_url="login")
 @check_admin
-def admin_dashboard(request,pk=None):
+def admin_dashboard(request, pk=None):
     courses = Course.objects.all()
     if pk != None:
-        course=Course.objects.get(id=pk)
-        return render(request, "dashboards/semesters.html",{'course':course})
+        course = Course.objects.get(id=pk)
+        return render(request, "dashboards/semesters.html", {"course": course})
     context = {"courses": courses}
 
     return render(request, "dashboards/admin.html", context)
+
 
 @check_admin
 @login_required(login_url="login")
@@ -98,7 +106,6 @@ def create_breaktime(request):
         ]
         BreakTime.objects.bulk_create(breaktimes)
         return redirect("canteen_admin")
-   
 
 
 @login_required(login_url="login")
@@ -116,7 +123,6 @@ def update_breaktime(request, pk):
         breaktime.semester = int(semester)
         breaktime.course = course
         breaktime.save()
-        
 
     return redirect("canteen_admin")
 
@@ -135,9 +141,8 @@ def delete_breaktime(request, pk):
     return redirect("canteen_admin")
 
 
-
-
 ########Staff
+
 
 @login_required(login_url="login")
 @check_staff
@@ -159,12 +164,29 @@ def staff_dashboard(request):
 
 @login_required(login_url="login")
 @check_staff
-def update_fooditem(request, pk):
+def delete_fooditem(request, pk):
+    item = FoodItem.objects.get(pk=pk)
+    item.delete()
+
+    return redirect("staff")
+
+
+@login_required(login_url="login")
+@check_staff
+def update_fooditem(request, pk=None):
     if request.method == "POST":
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        available = bool(request.POST.get("available"))
+        if pk == None:
+            item = FoodItem.objects.create(name=name, price=price, available=available)
+            item.save()
+            return redirect("staff")
+
         item = FoodItem.objects.get(pk=pk)
-        item.name = request.POST.get("name")
-        item.price = request.POST.get("price")
-        item.available = bool(request.POST.get("available"))
+        item.name = name
+        item.price = price
+        item.available = available
         item.save()
         return redirect("staff")
     return redirect("staff")
@@ -172,77 +194,115 @@ def update_fooditem(request, pk):
 
 @login_required(login_url="login")
 @check_staff
+def weekly_menu(request):
+    if request.GET.get("id"):
+        id = request.GET.get("id")
+        day = Menu.objects.get(id=id)
+        all_items = FoodItem.objects.all()
+
+        items = all_items.exclude(id__in=day.menu_items.values_list("id", flat=True))
+        return render(request, "dashboards/day_menu.html", {"items": items, "day": day})
+
+    
+
+    days = Menu.objects.all()
+    items = FoodItem.objects.all()
+    context = {
+        "days": days,
+        "items": items,
+    }
+    return render(request, "dashboards/week_menu.html", context)
+
+
+@login_required(login_url="login")
+@check_staff
+def update_day_menu(request,pk):
+    if request.GET.get("item_id"):
+        item_id= request.GET.get("item_id")
+        # menu_id=request.GET.get("menu_id")
+        item= FoodItem.objects.get(id=item_id)
+        menu=Menu.objects.get(id=pk)
+        menu.menu_items.remove(item)
+        menu.save()
+    
+    if request.method == "POST":
+        item_id = request.POST.get("item")
+        # menu_id = request.POST.get("menu")
+
+        item = FoodItem.objects.filter(id=int(item_id))
+        menu = Menu.objects.get(id=int(pk))
+        menu.menu_items.add(*item)
+        menu.save()
+
+    day = Menu.objects.get(id=pk)
+    all_items = FoodItem.objects.all()
+    items = all_items.exclude(id__in=day.menu_items.values_list("id", flat=True))
+  
+    # return redirect("update_day_menu",{"day":day,"items":items})
+    return render(request,"dashboards/day_menu.html",{"day":day,"items":items})
+    # return redirect("update_fooditem")
+
+
+@login_required(login_url="login")
+@check_staff
 def list_orders(request):
     breaktime_start_times = BreakTime.objects.all().values_list("start_time", flat=True)
-    orders = Orders.objects.filter(order_time__in=breaktime_start_times).order_by(
-        "order_time"
+    # Query orders grouped by 'order_time' and 'menu_item', and calculate total quantity for each group
+    orders = (
+        Orders.objects.filter(order_time__in=breaktime_start_times)
+        .values("order_time", "menu_item__name", "menu_item__price")
+        .annotate(total_quantity=Sum("quantity"))
     )
+
+    # Initialize an empty dictionary to hold the final result
+    orders_dict = {}
+
+    # Loop through the query results
+    for order in orders:
+        # Get the order_time and menu_item from the order
+        order_time = order["order_time"]
+        menu_item_name = order["menu_item__name"]
+        menu_item__price = order["menu_item__price"]
+
+        # If this order_time is not already in orders_dict, add it with an empty list
+        if order_time not in orders_dict:
+            orders_dict[order_time] = []
+
+        # Add this order to the list for this order_time
+        orders_dict[order_time].append(
+            {
+                menu_item_name: {
+                    "quantity": order["total_quantity"],
+                    "price": order["total_quantity"]
+                    * menu_item__price,  # Assuming menu_item has a 'price' attribute
+                }
+            }
+        )
+
+    print(orders)
+    return HttpResponse(orders)
     orders_dict = {
-        "ti": [
+        "time": [
             {"samosa": {"quantity": 5, "price": 250}},
             {"samosa": {"quantity": 5, "price": 250}},
         ],
-        "j": [
+        "time": [
             {"samosa": {"quantity": 5, "price": 250}},
             {"samosa": {"quantity": 5, "price": 250}},
             {"samosa": {"quantity": 5, "price": 250}},
         ],
     }
-
-    # for order in orders:
-    #     if order.order_time not in orders_dict:
-    #         orders_dict[order.order_time] = []
-    #         for i in orders_dict[order.order_time]:
-    #             if order.menu_item.name:
-    #                 orders_dict[order.order_time].append(
-    #                     {
-    #                         order.menu_item.name: {
-    #                             "quantity": order.quantity,
-    #                             "price": order.menu_item.price,
-    #                         }
-    #                     }
-    #                 )
-    #             else:
-    #                 orders_dict[order.order_time][order.menu_item.name][
-    #                     "quantity"
-    #                 ] += order.quantity
-    #                 orders_dict[order.order_time][order.menu_item.name][
-    #                     "price"
-    #                 ] += order.menu_item.price
-    for order in orders:
-        if order.order_time not in orders_dict:
-            orders_dict[order.order_time] = []
-
-        # Check if the item name already exists in the orders for this timestamp
-        item_exists = False
-        for item in orders_dict[order.order_time]:
-            if order.menu_item.name in item:
-                item[order.menu_item.name]["quantity"] += order.quantity
-                item[order.menu_item.name]["price"] += order.menu_item.price
-                item_exists = True
-                break
-
-        # If the item name does not exist, add a new item
-        if not item_exists:
-            orders_dict[order.order_time].append(
-                {
-                    order.menu_item.name: {
-                        "quantity": order.quantity,
-                        "price": order.menu_item.price,
-                    }
-                }
-            )
-
-    print(orders_dict)
-    context = {"orders": orders_dict}
-
-    print(orders_dict)
-    context = {"orders": orders_dict}
+    # for breaktime in breaktime_start_times:
+    #     if breaktime not in orders_dict:
+    #         orders_dict[breaktime] = []
+    #         for order in orders:
+    #             if
 
     # return render(request, "dashboards/orders.html", context)
 
 
 @login_required(login_url="login")
+@check_student_teacher
 def create_order(request, pk):
     if request.method == "POST":
         item = FoodItem.objects.get(pk=pk)

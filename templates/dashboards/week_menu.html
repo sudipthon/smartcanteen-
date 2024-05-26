@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -24,74 +25,56 @@
                             <img id="logo" src="../image/logo1.png" alt="">
                         </div>
                     </li>
-                    <li><a href="{%url 'staff'%}">Day Menu</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+
+                    <li><a href="{%url 'week_menu'%}">Day Menu</a></li>
                     <li><a href="{% url 'list_orders' %}">Orders</a></li>
-                    <li><a href="user.html">Profile</a></li>
-                    <li><a href="user.html">Logout</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </div>
     </div>
-    <div class="menu">
-        <h2>Food Items</h2>
-        <table>
+<table style="text-align: center;">
+    <tr>
+        <th>Day</th>
+        <th>
 
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Availability</th>
-                <th>Action</th>
-            </tr>
-            {% for item in food_item %}
-            <form action="#"></form>
-            <tr>
-                <td>{{item.name}}</td>
-                <td>
-                    <input type="number" name="price" value="{{item.price}}" id="">
-                </td>
-                {% if item.available %}
-                <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt="">
-                    <input type="checkbox" name="available" checked>
-                </td>
+            Item Name
+        </th>
+        <th>
+            Action
+        </th>
 
-                {% else %}
-                <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt="">
-                    <input type="checkbox" name="available"></input>
-                </td>
+    </tr>
+    {% for day in days|slice:':' %}
+  
 
-                {% endif %}
-                <td><button>Update</button></td>
-            </tr>
+        <tr>
+            <td>{{day}}</td>
+            {% for item in items %}
+            <td>
+                <button>
+
+                    {{item}}
+                </button>
+
+            </td>
             {% endfor %}
+            <td>
+                <a href="{% url 'update_day_menu' day.id  %}">
 
-        </table>
-    </div>
-    <br><br><br>
-    <div class="menu">
-        <h2>{{date}}</h2>
-        <h2>Today Menu</h2>
-        <table>
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Availability</th>
-            </tr>
-            {% for item in today_menu %}
-            <tr>
-                <td>{{item.name}}</td>
-                <td>{{item.price}}
-                </td>
-                {% if item.available %}
-                <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt=""></td>
-                {% else %}
-                <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt=""></td>
-                {% endif %}
-            </tr>
-            {% endfor %}
+                    
+                    <button style="background-color: rgb(114, 212, 114);">
+                        Edit
+                    </button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
 
-        </table>
-    </div>
-    </div>
+</table>
+
+    
 </body>
-
+    
 </html>

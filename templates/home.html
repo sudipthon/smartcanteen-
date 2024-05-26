@@ -61,7 +61,7 @@
                 {% csrf_token %}
 
                 <td> <input type="number" name="quantity" id="" value="{{order.quantity}}"></td>
-                <td>{{order.total_cost}}</td>
+                <td>Rs {{order.total_cost}}</td>
                 <td>
                     <button type="submit"> Update</button>
             </form>

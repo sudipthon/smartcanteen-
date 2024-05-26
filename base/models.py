@@ -76,7 +76,7 @@ class FoodItem(models.Model):
 
 class Menu(models.Model):
     day_of_week = models.CharField(max_length=2, choices=DAYS_OF_WEEK)
-    menu_items = models.ManyToManyField(FoodItem,  related_name='menu_items',)
+    menu_items = models.ManyToManyField(FoodItem, null=True, related_name='menu_items',)
     sequence= models.PositiveIntegerField(default=0)
     class Meta:
         ordering = ['sequence']
@@ -88,7 +88,7 @@ class Orders(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,)
     menu_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
     order_date = models.DateField(auto_now=True)
-    order_time = models.TimeField()
+    order_time = models.TimeField(null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
     status = models.BooleanField(default=False)
 

@@ -16,9 +16,9 @@
                 <ul>
                     <li id="brand">
                         <div id="brand">
-
+                            
                             <h2>
-
+                                
                                 Smart Canteen
                             </h2>
                             <img id="logo" src= "{%static 'images/icons/image.png'%}" alt="">
@@ -36,8 +36,12 @@
                             <a href="">Saturday</a>
                         </div>
                     </li>
+<<<<<<< HEAD
+=======
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{%url 'week_menu'%}">Day Menu</a></li>
+>>>>>>> be1763efa605c5513f83f5c1804e7f6723331775
                     <li><a href="{% url 'list_orders' %}">Orders</a></li>
-                    <li><a href="user.html">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
@@ -74,13 +78,33 @@
                     </td>
 
                     {% endif %}
-                    <td><button>Update</button></td>
+                    <td><button>Update</button>
+                        <button>
+
+                            <a href="{% url 'delete_fooditem' item.id %}">
+                                Delete</a>
+                            </button>
+                    </td>
                 </tr>
             </form>
             {% endfor %}
 
         </table>
-    </div>
+    </div><br><br><br><br>
+    <center>
+
+        <div>
+            <h2>Add Food Item</h2>
+            <form action="{% url 'update_fooditem' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Item Name">
+                <input type="number" name="price" placeholder="Price" id="">
+                <input type="checkbox" name="available" id="">
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </center>
+
     <br><br><br>
     <div class="menu">
         <h2>{{date}} Menu</h2>

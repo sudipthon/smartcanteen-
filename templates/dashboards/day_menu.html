@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff</title>
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+</head>
+
+<body>
+    <div class="main">
+        <div class="navbar">
+            <nav>
+                <ul>
+                    <li id="brand">
+                        <div id="brand">
+
+                            <h2>
+
+                                Smart Canteen
+                            </h2>
+                            <img id="logo" src="../image/logo1.png" alt="">
+                        </div>
+                    </li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+
+                    <li><a href="{%url 'week_menu'%}">Day Menu</a></li>
+                    <li><a href="{% url 'list_orders' %}">Orders</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <h1>{{day}}</h1>
+
+    <table>
+        <tr>
+
+            <th>Item </th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+        {% for item in day.menu_items.all %}
+        <tr>
+            <td>{{item.name}}</td>
+            <td>{{item.price}}</td>
+            <td>
+                <a href="{% url 'update_day_menu' day.id %}?item_id={{ item.id }}">
+
+                    <button>
+                        Remove
+                    </button>
+                </a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div>
+        <h2>Add Food Item</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Aciton</th>
+            </tr>
+            {% for item in items %}
+            <form action="{% url 'update_day_menu' day.id %}" method="POST">
+                {% csrf_token %}
+
+                <tr>
+                    <input type="text" name="menu" value="{{day.id}}" id="" hidden>
+                    <input type="text" name="item" value="{{item.id}}" id="" hidden>
+                    <td>{{item.name}}</td>
+                    <td>{{item.price}}</td>
+                    <td><button type="submit">
+                            Add
+
+                        </button></td>
+                </tr>
+            </form>
+            {% endfor %}
+        </table>
+
+
+            
+        </body>
+        <html>
+

@@ -8,17 +8,21 @@ urlpatterns = [
     # 
     path("delete_order/<int:pk>",delete_order,name="delete_order"),
     path("update_order/<int:pk>",update_order,name="update_order"),
-    # 
+    # admin
     path("admin/<int:pk>", admin_dashboard, name="canteen_admin"),
     path("admin/", admin_dashboard, name="canteen_admin"),
     path("update_breaktime/<int:pk>", update_breaktime, name="update_breaktime"),
     path("create_breaktime/", create_breaktime, name="create_breaktime"),
     path("delete_breaktime/<int:pk>", delete_breaktime, name="delete_breaktime"),
     
-    # 
+    # staff
     path("staff/", staff_dashboard, name="staff"),
     path("orders/", list_orders, name="list_orders"),
+    # path("")
+    path('fooditem/<int:pk>/', update_fooditem, name='update_fooditem'), #this and next URL use same view is used to add and update food item
+    path('fooditem', update_fooditem, name='update_fooditem'),
+    path("update_day_menu/<int:pk>", update_day_menu, name="update_day_menu"),
+    path('delete_fooditem/<int:pk>', delete_fooditem, name='delete_fooditem'),
     path("order/<int:pk>/", create_order, name="create_order"),
-    
-    path('update_fooditem/<int:pk>/', update_fooditem, name='update_fooditem'),
+    path("week_menu/", weekly_menu, name="week_menu"),
 ]

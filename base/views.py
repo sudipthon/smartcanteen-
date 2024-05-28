@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import pytz
 from django.db.models import Count
+from datetime import timedelta
 
 from django.db.models import Count, Sum
 
@@ -64,13 +65,15 @@ def login_view(request):
             return HttpResponse("Invalid Credentials")
     return render(request, "login/login.html")
 
-
+@login_required(login_url="login")
+@check_student_teacher
 def delete_order(request, pk):
     order = Orders.objects.get(pk=pk)
     order.delete()
     return redirect("home")
 
-
+@login_required(login_url="login")
+@check_student_teacher
 def update_order(request, pk):
     order = Orders.objects.get(pk=pk)
     if request.method == "POST":
@@ -78,7 +81,6 @@ def update_order(request, pk):
         order.quantity = quantity
         order.save()
         return redirect("home")
-    # return render(request, "edit_order.html", {"order": order})
 
 
 # ########Admin
@@ -94,8 +96,8 @@ def admin_dashboard(request, pk=None):
     return render(request, "dashboards/admin.html", context)
 
 
-@check_admin
 @login_required(login_url="login")
+@check_admin
 def create_breaktime(request):
     if request.method == "POST":
         name = request.POST.get("course")
@@ -109,6 +111,7 @@ def create_breaktime(request):
 
 
 @login_required(login_url="login")
+@check_admin
 def update_breaktime(request, pk):
     if request.method == "POST":
         course = request.POST.get("course")
@@ -128,6 +131,7 @@ def update_breaktime(request, pk):
 
 
 @login_required(login_url="login")
+@check_admin
 def delete_breaktime(request, pk):
     if request.method == "POST":
         course = Course.objects.get(id=pk)
@@ -203,8 +207,6 @@ def weekly_menu(request):
         items = all_items.exclude(id__in=day.menu_items.values_list("id", flat=True))
         return render(request, "dashboards/day_menu.html", {"items": items, "day": day})
 
-    
-
     days = Menu.objects.all()
     items = FoodItem.objects.all()
     context = {
@@ -216,15 +218,15 @@ def weekly_menu(request):
 
 @login_required(login_url="login")
 @check_staff
-def update_day_menu(request,pk):
+def update_day_menu(request, pk):
     if request.GET.get("item_id"):
-        item_id= request.GET.get("item_id")
+        item_id = request.GET.get("item_id")
         # menu_id=request.GET.get("menu_id")
-        item= FoodItem.objects.get(id=item_id)
-        menu=Menu.objects.get(id=pk)
+        item = FoodItem.objects.get(id=item_id)
+        menu = Menu.objects.get(id=pk)
         menu.menu_items.remove(item)
         menu.save()
-    
+
     if request.method == "POST":
         item_id = request.POST.get("item")
         # menu_id = request.POST.get("menu")
@@ -237,68 +239,34 @@ def update_day_menu(request,pk):
     day = Menu.objects.get(id=pk)
     all_items = FoodItem.objects.all()
     items = all_items.exclude(id__in=day.menu_items.values_list("id", flat=True))
-  
+
     # return redirect("update_day_menu",{"day":day,"items":items})
-    return render(request,"dashboards/day_menu.html",{"day":day,"items":items})
+    return render(request, "dashboards/day_menu.html", {"day": day, "items": items})
     # return redirect("update_fooditem")
 
 
 @login_required(login_url="login")
 @check_staff
 def list_orders(request):
-    breaktime_start_times = BreakTime.objects.all().values_list("start_time", flat=True)
-    # Query orders grouped by 'order_time' and 'menu_item', and calculate total quantity for each group
-    orders = (
-        Orders.objects.filter(order_time__in=breaktime_start_times)
-        .values("order_time", "menu_item__name", "menu_item__price")
-        .annotate(total_quantity=Sum("quantity"))
-    )
 
-    # Initialize an empty dictionary to hold the final result
+    breaktimes = BreakTime.objects.values_list("start_time", flat=True)
+    breaktimes = list(set(breaktimes))
+    orders = Orders.objects.all()
+    print(breaktimes)
     orders_dict = {}
+    for time in breaktimes:
+        orders_at_time = orders.filter(order_time=time)
+        orders_dict[time] = {}
+        for order in orders_at_time:
+            item_name = order.menu_item.name
+            if item_name not in orders_dict[time]:
+                orders_dict[time][item_name] = {"quantity": 0, "price": 0}
+            orders_dict[time][item_name]["quantity"] += order.quantity
+            orders_dict[time][item_name]["price"] += order.menu_item.price
 
-    # Loop through the query results
-    for order in orders:
-        # Get the order_time and menu_item from the order
-        order_time = order["order_time"]
-        menu_item_name = order["menu_item__name"]
-        menu_item__price = order["menu_item__price"]
+    context = {"orders": orders_dict, "breaktimes": breaktimes}
 
-        # If this order_time is not already in orders_dict, add it with an empty list
-        if order_time not in orders_dict:
-            orders_dict[order_time] = []
-
-        # Add this order to the list for this order_time
-        orders_dict[order_time].append(
-            {
-                menu_item_name: {
-                    "quantity": order["total_quantity"],
-                    "price": order["total_quantity"]
-                    * menu_item__price,  # Assuming menu_item has a 'price' attribute
-                }
-            }
-        )
-
-    print(orders)
-    return HttpResponse(orders)
-    orders_dict = {
-        "time": [
-            {"samosa": {"quantity": 5, "price": 250}},
-            {"samosa": {"quantity": 5, "price": 250}},
-        ],
-        "time": [
-            {"samosa": {"quantity": 5, "price": 250}},
-            {"samosa": {"quantity": 5, "price": 250}},
-            {"samosa": {"quantity": 5, "price": 250}},
-        ],
-    }
-    # for breaktime in breaktime_start_times:
-    #     if breaktime not in orders_dict:
-    #         orders_dict[breaktime] = []
-    #         for order in orders:
-    #             if
-
-    # return render(request, "dashboards/orders.html", context)
+    return render(request, "dashboards/orders.html", context)
 
 
 @login_required(login_url="login")
@@ -309,17 +277,36 @@ def create_order(request, pk):
         quantity = request.POST.get("quantity")
         print("Quantity: ", quantity)
         user = request.user
-        order = Orders.objects.create(
-            user=user,
-            menu_item=item,
-            quantity=quantity,
-            order_time=user.student.course.course_breaktimes.get(
-                semester=user.student.semester
-            ).start_time,
-        )
-        order.save()
+        if request.user.student:
+            current_time = timezone.now()
+            semester=user.student.semester
+            course=user.student.course
+            
+            
+            
+            # break_time = BreakTime.objects.get(course=course,semester=semester).start_time
+            # time_difference = break_time - current_time
+
+            # if time_difference > timedelta(hours=2):
+            #     return HttpResponse("You can only order 2 hours early")
+            
+            
+            # if  BreakTime.objects.get(course=course,semester=semester).start_time - current_time > 2:
+                # return HttpResponse("You can only order 2 hours before the break time")
+            order = Orders.objects.create(
+                    user=user,
+                    menu_item=item,
+                    quantity=quantity,
+                    order_time=user.student.course.course_breaktimes.get(
+                        semester=user.student.semester
+                    ).start_time,
+                )
+            # order.save()
     return redirect("home")
 
 
+<<<<<<< HEAD
 # {datetime.time(7, 30): {'samosa': {'quantity': 5, 'price': 250}}}
 
+=======
+>>>>>>> dfb9dae2fbf34d14e24e99fff9105085bb7c2ec0

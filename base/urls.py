@@ -18,7 +18,6 @@ urlpatterns = [
     # staff
     path("staff/", staff_dashboard, name="staff"),
     path("orders/", list_orders, name="list_orders"),
-    # path("")
     path('fooditem/<int:pk>/', update_fooditem, name='update_fooditem'), #this and next URL use same view is used to add and update food item
     path('fooditem', update_fooditem, name='update_fooditem'),
     path("update_day_menu/<int:pk>", update_day_menu, name="update_day_menu"),

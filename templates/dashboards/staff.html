@@ -26,7 +26,7 @@
 
                                 Smart Canteen
                             </h2>
-                            <img id="logo" src="../image/logo1.png" alt="">
+                            <img id="logo" src= "{%static 'images/icons/image.png'%}" alt="">
                         </div>
                     </li>
                     <li><a class="{% if request.path == '/staff/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
@@ -84,9 +84,9 @@
 
         </table>
     </div><br><br><br><br>
-    <center>
+    <!-- <center> -->
 
-        <div>
+        <div class="add_items">
             <h2>Add Food Item</h2>
             <form action="{% url 'update_fooditem' %}" method="POST">
                 {% csrf_token %}
@@ -96,12 +96,12 @@
                 <button type="submit">Add</button>
             </form>
         </div>
-    </center>
+    <!-- </center> -->
 
     <br><br><br>
     <div class="menu">
-        <h2>{{date}}</h2>
-        <h2>Today Menu</h2>
+        <h2>{{date}} Menu</h2>
+        <!-- <h2>Today Menu</h2> -->
         <table>
             <tr>
                 <th>Item</th>

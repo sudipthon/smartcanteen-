@@ -13,31 +13,28 @@
 </head>
 <body>
     <div class="main">
- 
-            <div class="navbar">
-                <nav>
-                    <ul>
-                        <li id="brand">
-                            <div id="brand">
-    
-                              <h2>
-    
-                                    Smart Canteen
-                                </h2>
-                                <img id="logo" src="../image/logo1.png" alt="">
-                            </div>
-                        </li>
-                        <li><a class="{% if request.path == '/staff/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                        </li>
-    
-                        <li><a class="{% if request.path == '/update_day_menu/' %}active{% endif %}"
-                                href="{%url 'week_menu'%}">Week Menu</a></li>
-                        <li><a class="{% if request.path == '/orders/' %}active{% endif %}"
-                            href="{% url 'list_orders' %}">Orders</a></li>
-                        <li><a href="{% url 'logout' %}">Logout</a></li>
-                    </ul>
-                </nav>
-            </div>
+       <div class="navbar">
+            <nav>
+                <ul>
+                    <li id="brand">
+                        <div id="brand">
+
+                          <h2>
+
+                                Smart Canteen
+                            </h2>
+                            <img id="logo" src="{% static 'images/icons/image.png' %}" alt="">
+                        </div>
+                    </li>
+                    <li><a class="{% if request.path == '/staff/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    </li>
+
+                    <li><a class="{% if request.path == '/update_day_menu/' %}active{% endif %}"
+                            href="{%url 'week_menu'%}">Week Menu</a></li>
+                    <li><a href="{% url 'list_orders' %}">Orders</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
         </div>
         <div class="routine">
             <h2>Orders</h2>

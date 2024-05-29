@@ -305,8 +305,8 @@ def create_order(request, pk):
     return redirect("home")
 
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 # {datetime.time(7, 30): {'samosa': {'quantity': 5, 'price': 250}}}
 
-=======
->>>>>>> dfb9dae2fbf34d14e24e99fff9105085bb7c2ec0
+# =======
+# >>>>>>> dfb9dae2fbf34d14e24e99fff9105085bb7c2ec0

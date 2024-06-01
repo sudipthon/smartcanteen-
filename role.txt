@@ -1,28 +1,27 @@
+User type
+id
+pass
 
 Teacher
-prawesh 
-prawesh@gmail.com
-prawesh
+12
+teacher
 
-sudperuser
-sudip
-sudip@gmail.com
+
+superuser
+123
 sudip
 
 
 Student
-nisha
-nisha@gmail.com
-9864student
+123456
+student
 
 Staff
-panauti
-panauti@gmail.com
-9864panauti
-
+12345
+staff
 
 Admin
 shushma
-shushma@gmail.com
-9864admin
+1234
+admin
 

@@ -1,0 +1,2 @@
+starting celery worker
+celery -A <project_name> worker --loglevel=info

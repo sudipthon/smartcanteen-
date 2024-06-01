@@ -6,8 +6,12 @@ from django.contrib.auth.decorators import login_required
 import pytz
 from django.db.models import Count
 from datetime import timedelta
+from django.core.files.storage import FileSystemStorage
 
+from django.conf import settings
+import os
 from django.db.models import Count, Sum
+from .tasks import add_users_task
 
 # local imports
 from .forms import *
@@ -17,6 +21,7 @@ from .decorators import *
 from itertools import groupby
 from operator import attrgetter
 from collections import defaultdict
+import pandas as pd
 
 
 # Create your views here.
@@ -26,7 +31,6 @@ def home(request):
     time_zone = timezone.now()
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
-
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
     menu_items = day_menu.menu_items.all()
     my_orders = Orders.objects.filter(user=request.user)
@@ -48,7 +52,7 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, college_id=username, password=password)
         if user:
             login(request, user)
             if hasattr(user, "student"):
@@ -65,12 +69,49 @@ def login_view(request):
             return HttpResponse("Invalid Credentials")
     return render(request, "login/login.html")
 
+
+def add_users(request):
+    if request.method == "POST":
+        input_type = request.POST.get("input_type")
+        user_type = request.POST.get("user_type")
+        if input_type == "file":
+            file = request.FILES.get("file")
+            custom_folder = os.path.join(settings.MEDIA_ROOT, user_type)
+            fs = FileSystemStorage(location=custom_folder)
+            file_name = fs.save(file.name, file)
+            file_path = fs.path(file_name)
+            add_users_task.delay(file_path, user_type)
+
+        college_id = request.POST.get("college_id")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = CustomUser.objects.create(
+            college_id=college_id, username=username, password=password
+        )
+        if user_type == "student":
+            course = request.POST.get("course")
+            semester = request.POST.get("semester")
+            course = Course.objects.get(name=course)
+            student = Student.objects.create(
+                user=user, course=course, semester=semester
+            )
+            student.save()
+        else:
+            admin = Administration.objects.create(user=user, user_type=user_type)
+            admin.save()
+
+        return redirect("home")
+    context = {}
+    return render(request, "dashboards/admin/add_users.html", context)
+
+
 @login_required(login_url="login")
 @check_student_teacher
 def delete_order(request, pk):
     order = Orders.objects.get(pk=pk)
     order.delete()
     return redirect("home")
+
 
 @login_required(login_url="login")
 @check_student_teacher
@@ -93,7 +134,7 @@ def admin_dashboard(request, pk=None):
         return render(request, "dashboards/semesters.html", {"course": course})
     context = {"courses": courses}
 
-    return render(request, "dashboards/admin.html", context)
+    return render(request, "dashboards/admin/admin.html", context)
 
 
 @login_required(login_url="login")
@@ -279,29 +320,26 @@ def create_order(request, pk):
         user = request.user
         if request.user.student:
             current_time = timezone.now()
-            semester=user.student.semester
-            course=user.student.course
-            
-            
-            
+            semester = user.student.semester
+            course = user.student.course
+
             # break_time = BreakTime.objects.get(course=course,semester=semester).start_time
             # time_difference = break_time - current_time
 
             # if time_difference > timedelta(hours=2):
             #     return HttpResponse("You can only order 2 hours early")
-            
-            
+
             # if  BreakTime.objects.get(course=course,semester=semester).start_time - current_time > 2:
-                # return HttpResponse("You can only order 2 hours before the break time")
-                
+            # return HttpResponse("You can only order 2 hours before the break time")
+
             order = Orders.objects.create(
-                    user=user,
-                    menu_item=item,
-                    quantity=quantity,
-                    order_time=user.student.course.course_breaktimes.get(
-                        semester=user.student.semester
-                    ).start_time,
-                )
+                user=user,
+                menu_item=item,
+                quantity=quantity,
+                order_time=user.student.course.course_breaktimes.get(
+                    semester=user.student.semester
+                ).start_time,
+            )
             # order.save()
     return redirect("home")
 

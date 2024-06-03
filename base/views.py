@@ -1,3 +1,4 @@
+# django imports
 from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 from django.utils import timezone
@@ -18,16 +19,17 @@ from .forms import *
 from .decorators import *
 
 # python imports
-from itertools import groupby
-from operator import attrgetter
-from collections import defaultdict
-import pandas as pd
 
 
 # Create your views here.
 @login_required(login_url="login")
 @check_student_teacher
 def home(request):
+    """
+    takes: request obj
+    returns: user to their respective dashboard by checking their user type with the help of decorator
+
+    """
     time_zone = timezone.now()
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
@@ -49,28 +51,28 @@ def logout_view(request):
 
 
 def login_view(request):
+    """
+    takes: request obj with college id and password
+    returns: redirects logged in user to home url
+    """
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, college_id=username, password=password)
-        if user:
-            login(request, user)
-            if hasattr(user, "student"):
-                return redirect("home")
-            elif hasattr(user, "administration"):
-                admin = user.administration
-                if admin.user_type == "Admin":
-                    return redirect("canteen_admin")
-                elif admin.user_type == "Staff":
-                    return redirect("staff")
-                else:
-                    return redirect("home")
-        else:
+        if user == None:
             return HttpResponse("Invalid Credentials")
+        login(request, user)
+        return redirect("home")
     return render(request, "login/login.html")
 
 
 def add_users(request):
+    """
+    if user chose to add users via file, then file is uploaded and saved in media folder and the celery task is called to add users to the database
+    if user chose to add users manually, then necessary field of user is fetched, created and saved in the database
+    Returns:
+        redirects user to admin dashboard
+    """
     if request.method == "POST":
         input_type = request.POST.get("input_type")
         user_type = request.POST.get("user_type")
@@ -108,6 +110,7 @@ def add_users(request):
 @login_required(login_url="login")
 @check_student_teacher
 def delete_order(request, pk):
+    
     order = Orders.objects.get(pk=pk)
     order.delete()
     return redirect("home")
@@ -323,15 +326,6 @@ def create_order(request, pk):
             semester = user.student.semester
             course = user.student.course
 
-            # break_time = BreakTime.objects.get(course=course,semester=semester).start_time
-            # time_difference = break_time - current_time
-
-            # if time_difference > timedelta(hours=2):
-            #     return HttpResponse("You can only order 2 hours early")
-
-            # if  BreakTime.objects.get(course=course,semester=semester).start_time - current_time > 2:
-            # return HttpResponse("You can only order 2 hours before the break time")
-
             order = Orders.objects.create(
                 user=user,
                 menu_item=item,
@@ -342,10 +336,3 @@ def create_order(request, pk):
             )
             # order.save()
     return redirect("home")
-
-
-# <<<<<<< HEAD
-# {datetime.time(7, 30): {'samosa': {'quantity': 5, 'price': 250}}}
-
-# =======
-# >>>>>>> dfb9dae2fbf34d14e24e99fff9105085bb7c2ec0

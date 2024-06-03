@@ -1,0 +1,1 @@
+bug regarding page redirection,login,home page ,decorators checking user type

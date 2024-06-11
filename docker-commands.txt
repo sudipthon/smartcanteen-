@@ -1,4 +1,6 @@
-docker build 
+docker build . -t <image_name>
+    docker build . -t <image_name>:<tag>
+    docker build . -t <image_name>:<tag> -f <Dockerfile_name>
 docker run <inageid>/<>
 
 docker-compose build
@@ -10,8 +12,15 @@ docker-compose up
 list images
     docker images / docker image ls
 
+    list only id of images 
+        docker images -q
+    
+
 removing image 
-docker rmi -f <image_id>
+    docker rmi -f <image_id>
+
+    remove all images at once
+            docker rmi  -f $(docker images -q)
 
 
 list containers
@@ -36,9 +45,23 @@ restart docker
     sudo systemctl restart docker
 
 
-to get different termaminal for rabbitmq,celery and django 
+(deattached mode)to get different termaminal for rabbitmq,celery and django 
     docker-compose up -d
     docker-compose logs -f web   # for django
     docker-compose logs -f celery # for celery
     docker-compose logs -f rabbitmq  # for rabbitmq
 
+
+to interact with image/os 
+    docker run -it <image_id> /bin/bash or /bin/sh
+
+
+port mapping 
+    docker run -p <host_port>:<container_port> <image_id>  # 8000 is host port and 8000 is container port
+
+
+
+To push your image, you should tag it with your Docker Hub username, like so:
+
+docker tag <image_id> <username>/<repository>:<tag>
+docker push yourusername/canteen:latest

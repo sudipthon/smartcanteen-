@@ -1,3 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
+    <style>
+        .active {
+            background-color: rgb(48, 201, 248);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="navbar">
+            <nav>
+                <ul>
+                    <li id="brand">
+                        <div id="brand">
+                            <h2>
+                                Smart Canteen
+                            </h2>
+                            <img id="logo" src="{%static 'images/icons/image.png'%}" alt="">
+                        </div>
+                    </li>
+                    <li><a href="{% url 'canteen_admin' %}">Home</a></li>
+                    <li><a href="{% url 'add_users'%}">Add User</a></li>
+                    <li><a href="admin.html">Settings</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+
+
+
+<center>
+
+
+
+
+
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <label for="">Input type</label>
@@ -42,6 +85,8 @@
   <button type="submit">Upload</button>
 </form>
 
+</center>
+
 
 
 <script>
@@ -79,3 +124,8 @@
     updateDivVisibility();
   });
 </script>
+
+<body>
+e    
+  </html>
+  

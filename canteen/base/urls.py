@@ -15,6 +15,7 @@ urlpatterns = [
     path("create_breaktime/", create_breaktime, name="create_breaktime"),
     path("delete_breaktime/<int:pk>", delete_breaktime, name="delete_breaktime"),
     path("add_users", add_users, name="add_users"),
+    path("list_users", list_users, name="list_users"),
     # staff
     path("staff/", staff_dashboard, name="staff"),
     path("orders/", list_orders, name="list_orders"),

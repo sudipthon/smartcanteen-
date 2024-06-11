@@ -5,16 +5,20 @@ from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Q
 
 from django.conf import settings
-import os
 from .tasks import add_users_task
 
 # local imports
 from .forms import *
+
 from .decorators import *
 
 # python imports
+import os
+import stat
+
 
 
 # Create your views here.
@@ -60,47 +64,6 @@ def login_view(request):
         login(request, user)
         return redirect("home")
     return render(request, "login/login.html")
-
-
-def add_users(request):
-    """
-    if user chose to add users via file, then file is uploaded and saved in media folder and the celery task is called to add users to the database
-    if user chose to add users manually, then necessary field of user is fetched, created and saved in the database
-    Returns:
-        redirects user to admin dashboard
-    """
-    if request.method == "POST":
-        input_type = request.POST.get("input_type")
-        user_type = request.POST.get("user_type")
-        if input_type == "file":
-            file = request.FILES.get("file")
-            custom_folder = os.path.join(settings.MEDIA_ROOT, user_type)
-            fs = FileSystemStorage(location=custom_folder)
-            file_name = fs.save(file.name, file)
-            file_path = fs.path(file_name)
-            add_users_task.delay(file_path, user_type)
-
-        college_id = request.POST.get("college_id")
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = CustomUser.objects.create(
-            college_id=college_id, username=username, password=password
-        )
-        if user_type == "student":
-            course = request.POST.get("course")
-            semester = request.POST.get("semester")
-            course = Course.objects.get(name=course)
-            student = Student.objects.create(
-                user=user, course=course, semester=semester
-            )
-            student.save()
-        else:
-            admin = Administration.objects.create(user=user, user_type=user_type)
-            admin.save()
-
-        return redirect("home")
-    context = {}
-    return render(request, "dashboards/admin/add_users.html", context)
 
 
 @login_required(login_url="login")
@@ -182,6 +145,69 @@ def delete_breaktime(request, pk):
             course.delete()
             return redirect("canteen_admin")
     return redirect("canteen_admin")
+
+
+def add_users(request):
+    """
+    if user chose to add users via file, then file is uploaded and saved in media folder and the celery task is called to add users to the database
+    if user chose to add users manually, then necessary field of user is fetched, created and saved in the database
+    Returns:
+        redirects user to admin dashboard
+    """
+    if request.method == "POST":
+        input_type = request.POST.get("input_type")
+        user_type = request.POST.get("user_type")
+        if input_type == "file":
+            file = request.FILES.get("file")
+            custom_folder = os.path.join(settings.MEDIA_ROOT, user_type)
+            os.makedirs(custom_folder, exist_ok=True)  # Create directory if it doesn't exist
+            os.chmod(custom_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH)  # Change permissions
+
+            fs = FileSystemStorage(location=custom_folder)
+            file_name = fs.save(file.name, file)
+            file_path = fs.path(file_name)
+            add_users_task.delay(file_path, user_type)
+            return redirect("canteen_admin")
+
+        college_id = request.POST.get("college_id")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = CustomUser.objects.create(
+            college_id=college_id, username=username, password=password
+        )
+        if user_type == "student":
+            course = request.POST.get("course")
+            semester = request.POST.get("semester")
+            course = Course.objects.get(name=course)
+            student = Student.objects.create(
+                user=user, course=course, semester=semester
+            )
+            student.save()
+        else:
+            admin = Administration.objects.create(user=user, user_type=user_type)
+            admin.save()
+
+        return redirect("home")
+    context = {}
+    return render(request, "dashboards/admin/add_users.html", context)
+
+
+def list_users(request):
+    """
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    students = Student.objects.all()[:8]
+    teachers = Administration.objects.filter(user_type="teacher")[:7]
+    users = CustomUser.objects.filter(
+        Q(student__isnull=False) | Q(administration__user_type="teacher")
+    )
+    context = {"users": users}
+    context={"students":students,"teachers":teachers}
+    return render(request, "dashboards/admin/users_list.html", context)
 
 
 ########Staff

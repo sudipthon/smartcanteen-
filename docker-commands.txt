@@ -1,0 +1,44 @@
+docker build 
+docker run <inageid>/<>
+
+docker-compose build
+build using no cache
+    docker-compose build --no-cache
+docker-compose up
+
+
+list images
+    docker images / docker image ls
+
+removing image 
+docker rmi -f <image_id>
+
+
+list containers
+    docker ps -a
+    docker container ls -a
+
+remove conatiner
+    docker rm -f <container_id>
+
+
+listing dir inside contianer 
+    docker run -it --rm <image_name> ls /app/
+
+stoping container 
+    docker-compose down
+
+
+start docker
+    sudo systemctl start docker
+
+restart docker
+    sudo systemctl restart docker
+
+
+to get different termaminal for rabbitmq,celery and django 
+    docker-compose up -d
+    docker-compose logs -f web   # for django
+    docker-compose logs -f celery # for celery
+    docker-compose logs -f rabbitmq  # for rabbitmq
+

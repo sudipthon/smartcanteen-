@@ -1,1 +1,1 @@
-bug regarding page redirection,login,home page ,decorators checking user typegit 
+check teachers add from file

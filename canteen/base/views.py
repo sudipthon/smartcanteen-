@@ -92,7 +92,7 @@ def admin_dashboard(request, pk=None):
     courses = Course.objects.all()
     if pk != None:
         course = Course.objects.get(id=pk)
-        return render(request, "dashboards/semesters.html", {"course": course})
+        return render(request, "dashboards/admin/semesters.html", {"course": course})
     context = {"courses": courses}
 
     return render(request, "dashboards/admin/admin.html", context)

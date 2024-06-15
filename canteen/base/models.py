@@ -10,7 +10,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
-    college_id = models.CharField(max_length=20, unique=True)
+    college_id = models.IntegerField( unique=True)
 
     USERNAME_FIELD = (
         "college_id"
@@ -20,6 +20,8 @@ class CustomUser(AbstractUser):
     ]
     def __str__(self):
         return f"{self.college_id} -{self.username}"
+    class Meta:
+        ordering = ["college_id"]
 
     def save(self, *args, **kwargs):
         self.set_password(self.password)
@@ -49,6 +51,7 @@ class Administration(models.Model):
 
     def __str__(self):
         return self.user.username
+    
 
 
 SEMESTER_CHOICES = (
@@ -76,6 +79,7 @@ class Student(models.Model):
 
     def __str__(self):
         return self.user.username
+    
 
 
 DAYS_OF_WEEK = [

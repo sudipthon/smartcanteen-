@@ -20,7 +20,6 @@ import os
 import stat
 
 
-
 # Create your views here.
 @login_required(login_url="login")
 @check_student_teacher
@@ -160,8 +159,12 @@ def add_users(request):
         if input_type == "file":
             file = request.FILES.get("file")
             custom_folder = os.path.join(settings.MEDIA_ROOT, user_type)
-            os.makedirs(custom_folder, exist_ok=True)  # Create directory if it doesn't exist
-            os.chmod(custom_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH)  # Change permissions
+            os.makedirs(
+                custom_folder, exist_ok=True
+            )  # Create directory if it doesn't exist
+            os.chmod(
+                custom_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH | stat.S_IXOTH
+            )  # Change permissions
 
             fs = FileSystemStorage(location=custom_folder)
             file_name = fs.save(file.name, file)
@@ -200,13 +203,28 @@ def list_users(request):
     Returns:
         _type_: _description_
     """
-    students = Student.objects.all()[:8]
-    teachers = Administration.objects.filter(user_type="teacher")[:7]
-    users = CustomUser.objects.filter(
-        Q(student__isnull=False) | Q(administration__user_type="teacher")
-    )
-    context = {"users": users}
-    context={"students":students,"teachers":teachers}
+    students = Student.objects.all().order_by("user__college_id")[:9]
+    teachers = Administration.objects.filter(user_type="Teacher").order_by(
+        "user__college_id"
+    )[:7]
+    students = Student.objects.all()
+    courses = Course.objects.all()
+    teacher_query = request.GET.get("search_teacher", "")
+    student_query = request.GET.get("search_student", "")
+    if teacher_query:
+        teachers = Administration.objects.filter(user_type="Teacher").filter(
+            Q(user__college_id__icontains=teacher_query)
+            | Q(user__username__icontains=teacher_query)
+        )
+    if student_query:
+        students = Student.objects.filter(
+            Q(user__college_id__icontains=student_query)
+            | Q(user__username__icontains=student_query)
+        )
+
+    courses = Course.objects.all()
+
+    context = {"students": students, "teachers": teachers, "courses": courses}
     return render(request, "dashboards/admin/users_list.html", context)
 
 

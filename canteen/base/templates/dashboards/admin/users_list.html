@@ -9,6 +9,15 @@
         .active {
             background-color: rgb(48, 201, 248);
         }
+
+        .user-section {
+            width: 80%;
+            border: 1px solid black;
+            padding: 10px;
+            margin: 100px;
+            /* flex-direction: row; */
+
+        }
     </style>
 </head>
 
@@ -36,15 +45,21 @@
     </div>
 
     <br><br><br>
-    <center><h2>Student</h2>
+    <div class="user-section">
 
+        <h2>Student</h2>
+        <div class="search-section">
+            <form action="" method="get">
+                <input type="text" name="search_student" placeholder="Search">
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <div>
             <table>
                 <tr>
                     <th>College id</th>
                     <th>Useranme</th>
-                    <!-- <th>Usertype</th> -->
                     <th>Course</th>
                     <th>Semester</th>
                     <th>Action</th>
@@ -53,37 +68,53 @@
                 <tr>
                     <td>{{student.user.college_id}}</td>
                     <td>{{student.user.username}}</td>
-                    <!-- <td>{{student.user_type}}</td> -->
                     <td>{{student.course}}</td>
                     <td>{{student.semester}}</td>
+                    <td>
+                        <button>Change Password</button>
+                        <button>Delete User</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-    </center>
-    <br><br><br><br><br>
-    <center><h2>Teachers</h2>
 
+    </div>
+    <br><br><br><br><br>
+    <div class="user-section">
+
+        <h2>Teachers</h2>
+
+        <div class="search-section">
+            <form action="" method="get">
+                <input type="text" name="search_teacher" placeholder="Search">
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <div>
             <table>
                 <tr>
                     <th>College id</th>
                     <th>Useranme</th>
-                    <!-- <th>Usertype</th> -->
-                
+                    <th>Action</th>
+
                 </tr>
                 {% for teacher in teachers %}
                 <tr>
                     <td>{{teacher.user.college_id}}</td>
                     <td>{{teacher.user.username}}</td>
-                    <!-- <td>{{teacher.user_type}}</td> -->
-              
+                    <td>
+                        <button>Chnage password</button>
+                        <button>Delete user</button>
+                    </td>
+
                 </tr>
                 {% endfor %}
             </table>
         </div>
-    </center>
+
+    </div>
 
 </body>
 

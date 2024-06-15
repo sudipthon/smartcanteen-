@@ -172,14 +172,14 @@ button a{
     display: flex;
     align-items: center;
 }
-input{
+/* input{
     width: 100%;
     padding: 18px;
     border: 0;
     background: white;
     outline: 0;
     color: black;
-}
+} */
 .input-field i{
     margin-left: 15px;
     color: #999;

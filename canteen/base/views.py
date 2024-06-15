@@ -65,25 +65,6 @@ def login_view(request):
     return render(request, "login/login.html")
 
 
-@login_required(login_url="login")
-@check_student_teacher
-def delete_order(request, pk):
-    order = Orders.objects.get(pk=pk)
-    order.delete()
-    return redirect("home")
-
-
-@login_required(login_url="login")
-@check_student_teacher
-def update_order(request, pk):
-    order = Orders.objects.get(pk=pk)
-    if request.method == "POST":
-        quantity = request.POST.get("quantity")
-        order.quantity = quantity
-        order.save()
-        return redirect("home")
-
-
 # ########Admin
 @login_required(login_url="login")
 @check_admin
@@ -229,6 +210,53 @@ def list_users(request):
 
 
 ########Staff
+
+
+@login_required(login_url="login")
+@check_student_teacher
+def delete_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    order.delete()
+    return redirect("home")
+
+
+@login_required(login_url="login")
+@check_student_teacher
+def update_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    if request.method == "POST":
+        quantity = request.POST.get("quantity")
+        order.quantity = quantity
+        order.save()
+        return redirect("home")
+
+
+@login_required(login_url="login")
+def delete_user(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    # Get the previous URL
+    previous_url = request.META.get("HTTP_REFERER")
+    user.delete()
+    return redirect(previous_url)
+
+
+def change_password(request, pk=None):
+    if pk:
+        user = CustomUser.objects.get(pk=pk)
+        request.session["user_id"] = user.id
+    else:
+        user = CustomUser.objects.get(pk=request.session.get("user_id"))
+
+    if request.method == "POST":
+        pk=request.session.get("user_id")
+        user = CustomUser.objects.get(pk=request.session.get("user_id"))
+        password = request.POST.get("password")
+        user.set_password(password)
+        user.save()
+        if "user_id" in request.session:
+            del request.session["user_id"]
+        return redirect(home)
+    return render(request, "dashboards/change_password.html", {"user": user})
 
 
 @login_required(login_url="login")

@@ -71,8 +71,12 @@
                     <td>{{student.course}}</td>
                     <td>{{student.semester}}</td>
                     <td>
-                        <button>Change Password</button>
-                        <button>Delete User</button>
+                        <a href="{% url 'change_password' student.user.pk  %}">
+                            <button>Change Password</button>
+                        </a>
+                        <a href="{% url 'delete_user' student.user.pk %}">
+                            <button>Delete User</button>
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -105,10 +109,13 @@
                     <td>{{teacher.user.college_id}}</td>
                     <td>{{teacher.user.username}}</td>
                     <td>
-                        <button>Chnage password</button>
-                        <button>Delete user</button>
+                        <a href="{% url 'change_password' teacher.user.pk  %}">
+                            <button>Change Password</button>
+                        </a>
+                        <a href="{% url 'delete_user' teacher.user.pk %}">
+                            <button>Delete User</button>
+                        </a>
                     </td>
-
                 </tr>
                 {% endfor %}
             </table>

@@ -24,7 +24,8 @@ class CustomUser(AbstractUser):
         ordering = ["college_id"]
 
     def save(self, *args, **kwargs):
-        self.set_password(self.password)
+        if self.pk is None:
+            self.set_password(self.password)
         super(CustomUser, self).save(*args, **kwargs)
 
 

@@ -13,7 +13,7 @@
                         <img id="logo" src="{%static 'images/icons/image.png' %}" alt="">
                     </div>
                 </li>
-                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a class="{% if request.path == '' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
                 <li><a href="user.html">Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>

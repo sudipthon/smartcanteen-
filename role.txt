@@ -15,6 +15,10 @@ sudip
 Student
 123456
 student
+2345
+shushma
+7240026
+1234
 
 Staff
 12345

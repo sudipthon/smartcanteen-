@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color: #8b1304;
         }
     </style>
 </head>
@@ -22,23 +22,25 @@
                             <h2>
                                 Smart Canteen
                             </h2>
-                            <img id="logo" src="../image/logo1.png" alt="">
+                            <img id="logo" src="{%static 'images/icons/image.png'%}"alt="">
                         </div>
                     </li>
-                    <li><a href="admin.html">Home</a></li>
-                    <li><a href="admin.html">Profile</a></li>
+                    <li><a href="{% url 'canteen_admin' %}">Home</a></li>
+                    <li><a href="{% url 'add_users'%}">Add User</a></li>
+                    <li><a href="{% url 'list_users'%}">Users</a></li>
                     <li><a href="admin.html">Settings</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </div>
-        <div class="routine">
-            <h2>Routine</h2>
 
-            <div>
-
-                <table>
-                    <tr>
+            <div class="routine">
+                <h2>Routine</h2>
+                
+                <div>
+                    
+                    <table>
+                        <tr>
                         <th>
 
                             <h3>
@@ -68,7 +70,7 @@
                             <td>
                                 <input type="time" name="start_time" value="{{breakroutine.start_time|date:'H:i'}}">
                                 <input type="time" name="end_time" value="{{breakroutine.end_time|date:'H:i'}}">
-
+                                
                             </td>
                             <td><button type="submit">Update</button></td>
                         </tr>
@@ -78,12 +80,12 @@
                 </table>
             </div>
             <br><br><br>
-
+            
         </div>
-    </div>
-
-<br><br><br>
-
+        </div>
+    
+    <br><br><br>
+    
 </body>
 
 </html>

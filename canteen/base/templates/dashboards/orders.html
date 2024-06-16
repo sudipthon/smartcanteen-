@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color: #8b1304;
         }
     </style>
 </head>
@@ -36,34 +36,35 @@
                 </ul>
             </nav>
         </div>
-        <div class="routine">
-            <h2>Orders</h2>
-            <br><br>
-            {% for time,items in orders.items%}
-            <div>
-                <h3> {{time}}</h3>
-                <table>
-                    <tr>
-                        <th>Item</th>
-                        <th>Quantity Ordered</th>
-                        <th>Total price</th>
-                    </tr>
-                    <tr>
-                        {% for item_name,info in items.items %}
-                        <td> {{item_name}} </td>
-                        <td> {{info.quantity}} </td>
-                        <td> {{info.price}} </td>
-                    </tr>
-                    {% endfor %}
-                </table>
+
+            <div class="routine">
+                <h2>Orders</h2>
+                <br><br>
+                {% for time,items in orders.items%}
+                <div>
+                    <h3> {{time}}</h3>
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity Ordered</th>
+                            <th>Total price</th>
+                        </tr>
+                        <tr>
+                            {% for item_name,info in items.items %}
+                            <td> {{item_name}} </td>
+                            <td> {{info.quantity}} </td>
+                            <td> {{info.price}} </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                
+                <br><br><br><br>
+                {% endfor %}
+
             </div>
-
-            <br><br><br><br>
-            {% endfor %}
-
-        </div>
+        
     </div>
-
-</body>
-
-</html>
+    </body>
+    
+    </html>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color: #8b1304;
         }
     </style>
 </head>
@@ -27,6 +27,7 @@
                     </li>
                     <li><a href="{% url 'canteen_admin' %}">Home</a></li>
                     <li><a href="{% url 'add_users'%}">Add User</a></li>
+                    <li><a href="{% url 'list_users'%}">Users</a></li>
                     <li><a href="admin.html">Settings</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
@@ -125,7 +126,6 @@
   });
 </script>
 
-<body>
-e    
-  </html>
+<body>  
+</html>
   

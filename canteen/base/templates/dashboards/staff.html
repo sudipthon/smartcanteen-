@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color: #8b1304;
         }
     </style>
 </head>
@@ -40,8 +40,9 @@
             </nav>
         </div>
     </div>
-    <div class="menu">
-        <h2>Food Items</h2>
+
+        <div class="menu">
+            <h2>Food Items</h2>
         <table>
             <tr>
                 <th>Item</th>
@@ -52,7 +53,7 @@
             {% for item in food_item %}
             <form action="{% url 'update_fooditem' item.id %}" method="POST">
                 {% csrf_token %}
-
+                
                 <tr>
                     <td>
                         <input type="text" name="name" value="{{item.name}}" id="" style="padding: 2px 5px;">
@@ -64,41 +65,40 @@
                     <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt="">
                         <input type="checkbox" name="available" checked>
                     </td>
-
+                    
                     {% else %}
                     <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt="">
                         <input type="checkbox" name="available"></input>
                     </td>
-
+                    
                     {% endif %}
                     <td><button>Update</button>
                         <button>
-
+                            
                             <a href="{% url 'delete_fooditem' item.id %}">
                                 Delete</a>
                             </button>
-                    </td>
-                </tr>
-            </form>
-            {% endfor %}
-
-        </table>
-    </div><br><br><br><br>
+                        </td>
+                    </tr>
+                </form>
+                {% endfor %}
+                
+            </table>
+        </div><br><br><br><br>
     <!-- <center> -->
-
+        
         <div class="add_items">
             <h2>Add Food Item</h2>
             <form action="{% url 'update_fooditem' %}" method="POST">
                 {% csrf_token %}
-                <input type="text" name="name" placeholder="Item Name">
-                <input type="number" name="price" placeholder="Price" id="">
-                <input type="checkbox" name="available" id="">
+                <input type="text" name="name" placeholder="Item Name"><br><br>
+                <input type="number" name="price" placeholder="Price" id=""><br><br>
+                <input type="checkbox" name="available" id=""><br>
                 <button type="submit">Add</button>
             </form>
         </div>
+        <br><br><br><br>
     <!-- </center> -->
-
-    <br><br><br>
     <div class="menu">
         <h2>{{date}} Menu</h2>
         <!-- <h2>Today Menu</h2> -->
@@ -120,10 +120,10 @@
                 {% endif %}
             </tr>
             {% endfor %}
-
+            
         </table>
     </div>
-    </div>
+</div>
 </body>
 
 </html>

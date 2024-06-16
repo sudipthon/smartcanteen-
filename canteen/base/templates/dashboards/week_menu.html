@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color:#8b1304;
         }
     </style>
 </head>
@@ -40,47 +40,44 @@
             </nav>
         </div>
     </div>
-    <table style="text-align: center;">
-        <tr>
-            <th>Day</th>
-            <th>
+    <table>
+            <h2>Week Menu</h2>
 
-                Item Name
-            </th>
-            <th>
-                Action
-            </th>
+                <tr>
+                    <th>Day</th>
+                    <th>Item Name</th>
+                    <th>Action</th> 
+                </tr>
 
-        </tr>
-        {% for day in days|slice:':' %}
-
-
-        <tr>
-            <td>{{day}}</td>
-            {% for item in day.menu_items.all %}
-            <td>
-                <button>
-
-                    {{item}}
-                </button>
-
-            </td>
-            {% endfor %}
-            <td>
-                <a href="{% url 'update_day_menu' day.id  %}">
-
-
-                    <button style="background-color: rgb(114, 212, 114);">
-                        Edit
-                    </button>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-
+                {% for day in days|slice:':' %}
+                
+                
+                <tr>
+                    <td>{{day}}</td>
+                    {% for item in day.menu_items.all %}
+                    <td>
+                        <button>
+                            
+                            {{item}}
+                        </button>
+                        
+                    </td>
+                    {% endfor %}
+                    <td>
+                        <a href="{% url 'update_day_menu' day.id  %}">
+                            
+                            
+                            <button style="background-color: rgb(114, 212, 114);">
+                                Edit
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                
     </table>
-
-
+    
+    
 </body>
 
 </html>

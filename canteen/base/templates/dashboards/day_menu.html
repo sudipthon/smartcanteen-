@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
     <style>
         .active {
-            background-color: rgb(48, 201, 248);
+            background-color: #8b1304;
         }
     </style>
 </head>
@@ -42,33 +42,34 @@
         </div>
     </div>
 
-    
-    <h1>{{day}}</h1>
 
-    <table>
-        <tr>
 
-            <th>Item </th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-        {% for item in day.menu_items.all %}
-        <tr>
-            <td>{{item.name}}</td>
-            <td>{{item.price}}</td>
-            <td>
-                <a href="{% url 'update_day_menu' day.id %}?item_id={{ item.id }}">
-
-                    <button>
-                        Remove
-                    </button>
-                </a>
-            </td>
-
-        </tr>
-        {% endfor %}
-    </table>
-
+        <h1>{{day}}</h1>
+        
+        <table>
+            <tr>
+                
+                <th>Item </th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            {% for item in day.menu_items.all %}
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+                <td>
+                    <a href="{% url 'update_day_menu' day.id %}?item_id={{ item.id }}">
+                        
+                        <button>
+                            Remove
+                        </button>
+                    </a>
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </table>
+        
     <div>
         <h2>Add Food Item</h2>
         <table>
@@ -80,23 +81,23 @@
             {% for item in items %}
             <form action="{% url 'update_day_menu' day.id %}" method="POST">
                 {% csrf_token %}
-
+                
                 <tr>
                     <input type="text" name="menu" value="{{day.id}}" id="" hidden>
                     <input type="text" name="item" value="{{item.id}}" id="" hidden>
                     <td>{{item.name}}</td>
                     <td>{{item.price}}</td>
                     <td><button type="submit">
-                            Add
-
-                        </button></td>
+                        Add
+                        
+                    </button></td>
                 </tr>
             </form>
             {% endfor %}
         </table>
-
-
-            
-        </body>
-        <html>
-
+        
+        
+    </body>
+    <html>
+        
+        

@@ -14,7 +14,7 @@ sudip
 
 Student
 123456
-co
+student
 
 Staff
 12345

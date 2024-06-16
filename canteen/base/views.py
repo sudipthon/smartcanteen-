@@ -159,7 +159,7 @@ def add_users(request):
         user = CustomUser.objects.create(
             college_id=college_id, username=username, password=password
         )
-        if user_type == "student":
+        if user_type == "Student":
             course = request.POST.get("course")
             semester = request.POST.get("semester")
             course = Course.objects.get(name=course)
@@ -172,7 +172,9 @@ def add_users(request):
             admin.save()
 
         return redirect("home")
-    context = {}
+    courses = Course.objects.all()
+
+    context = {"courses": courses}
     return render(request, "dashboards/admin/add_users.html", context)
 
 

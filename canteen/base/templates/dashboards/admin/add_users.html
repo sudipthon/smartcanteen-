@@ -3,129 +3,135 @@
 <html>
 
 <head>
-    <title>Admin</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
-    <style>
-        .active {
-            background-color: #8b1304;
-        }
-    </style>
+  <title>Admin</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
+  <style>
+    .active {
+      background-color: #8b1304;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="main">
-        <div class="navbar">
-            <nav>
-                <ul>
-                    <li id="brand">
-                        <div id="brand">
-                            <h2>
-                                Smart Canteen
-                            </h2>
-                            <img id="logo" src="{%static 'images/icons/image.png'%}" alt="">
-                        </div>
-                    </li>
-                    <li><a href="{% url 'canteen_admin' %}">Home</a></li>
-                    <li><a href="{% url 'add_users'%}">Add User</a></li>
-                    <li><a href="{% url 'list_users'%}">Users</a></li>
-                    <li><a href="admin.html">Settings</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                </ul>
-            </nav>
+  <div class="main">
+    <div class="navbar">
+      <nav>
+        <ul>
+          <li id="brand">
+            <div id="brand">
+              <h2>
+                Smart Canteen
+              </h2>
+              <img id="logo" src="{%static 'images/icons/image.png'%}" alt="">
+            </div>
+          </li>
+          <li><a href="{% url 'canteen_admin' %}">Home</a></li>
+          <li><a href="{% url 'add_users'%}">Add User</a></li>
+          <li><a href="{% url 'list_users'%}">Users</a></li>
+          <li><a href="admin.html">Settings</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+
+
+
+    <center>
+
+
+
+
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="">Input type</label>
+        <select name="input_type" id="">
+          <option value="file">File</option>
+          <option value="manual">Manual</option>
+        </select>
+
+        <br>
+        <label for="">User Type</label>
+        <select name="user_type" id="">
+          <option value="Student">Student</option>
+          <option value="Teacher">Teacher</option>
+          <option value="Staff">Staff</option>
+        </select>
+        <br>
+
+        <div class="file">
+          <label for="">File</label>
+          <input type="file" name="file" id="">
         </div>
+        <br>
+
+        <div class="manual">
+          <label for="">ID:</label>
+          <input type="text" name="college_id" id="">
+          <br>
+          <label for="">Username:</label>
+          <input type="text" name="username" id="">
+          <br>
+          <label for="">Password:</label>
+          <input type="text" name="password" id="">
+          <br>
+        </div>
+        <div class="manual_student">
+          <label for="">Course:</label>
+          <!-- <input type="text" name="course" id=""><br> -->
+
+          <select name="course" id="">
+            {%for course in courses %}
+            <option value="{{course.name}}">{{course.name}}</option>
+            {%endfor%}
+          </select><br>
+          <label for="">Semester:</label>
+          <input type="number" name="semester" id="">
+
+        </div>
+        <button type="submit">Upload</button>
+      </form>
+
+    </center>
 
 
 
-<center>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var inputTypeSelect = document.querySelector('select[name="input_type"]');
+        var userTypeSelect = document.querySelector('select[name="user_type"]');
+        var manualDiv = document.querySelector('div.manual');
+        var manualStudentDiv = document.querySelector('div.manual_student');
+        var fileInput = document.querySelector('div.file');
 
+        function updateDivVisibility() {
+          var inputType = inputTypeSelect.value;
+          var userType = userTypeSelect.value;
 
-
-
-
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <label for="">Input type</label>
-  <select name="input_type" id="">
-    <option value="file">File</option>
-    <option value="manual">Manual</option>
-  </select>
-
-  <br>
-  <label for="">User Type</label>
-  <select name="user_type" id="">
-    <option value="Student">Student</option>
-    <option value="Teacher">Teacher</option>
-    <option value="Staff">Staff</option>
-  </select>
-  <br>
-
-  <div class="file">
-    <label for="">File</label>
-    <input type="file" name="file" id="">
-  </div>
-  <br>
-
-  <div class="manual">
-    <label for="">ID:</label>
-    <input type="text" name="college_id" id="">
-    <br>
-    <label for="">Username:</label>
-    <input type="text" name="username" id="">
-    <br>
-    <label for="">Password:</label>
-    <input type="text" name="password" id="">
-    <br>
-  </div>
-  <div class="manual_student">
-    <label for="">Course:</label>
-    <input type="text" name="course" id=""><br>
-    <label for="">Semester:</label>
-    <input type="number" name="" id="">
-
-  </div>
-  <button type="submit">Upload</button>
-</form>
-
-</center>
-
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var inputTypeSelect = document.querySelector('select[name="input_type"]');
-    var userTypeSelect = document.querySelector('select[name="user_type"]');
-    var manualDiv = document.querySelector('div.manual');
-    var manualStudentDiv = document.querySelector('div.manual_student');
-    var fileInput = document.querySelector('div.file');
-
-    function updateDivVisibility() {
-      var inputType = inputTypeSelect.value;
-      var userType = userTypeSelect.value;
-
-      if (inputType === 'file') {
-        manualDiv.style.display = 'none';
-        manualStudentDiv.style.display = 'none';
-        fileInput.style.display = 'block';
-      } else if (inputType === 'manual') {
-        manualDiv.style.display = 'block';
-        fileInput.style.display = 'none';
-        if (userType === 'Student') {
-          manualStudentDiv.style.display = 'block';
-        } else {
-          manualStudentDiv.style.display = 'none';
+          if (inputType === 'file') {
+            manualDiv.style.display = 'none';
+            manualStudentDiv.style.display = 'none';
+            fileInput.style.display = 'block';
+          } else if (inputType === 'manual') {
+            manualDiv.style.display = 'block';
+            fileInput.style.display = 'none';
+            if (userType === 'Student') {
+              manualStudentDiv.style.display = 'block';
+            } else {
+              manualStudentDiv.style.display = 'none';
+            }
+          }
         }
-      }
-    }
 
-    inputTypeSelect.addEventListener('change', updateDivVisibility);
-    userTypeSelect.addEventListener('change', updateDivVisibility);
-    // userTypeSelect.addEventListener('change', updateDivVisibility);
-    
-    // Call the function once to set the initial visibility
-    updateDivVisibility();
-  });
-</script>
+        inputTypeSelect.addEventListener('change', updateDivVisibility);
+        userTypeSelect.addEventListener('change', updateDivVisibility);
+        // userTypeSelect.addEventListener('change', updateDivVisibility);
 
-<body>  
+        // Call the function once to set the initial visibility
+        updateDivVisibility();
+      });
+    </script>
+
+    <body>
+
 </html>
-  

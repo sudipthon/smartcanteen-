@@ -12,9 +12,9 @@
 
 <body>
     <div class="container">
-        <div class="form" >
+        <div class="form">
             <h1>LogIn</h1>
-            <form action=""  method="POST">
+            <form action="" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
                     <div class="input-field">
@@ -24,7 +24,7 @@
                     <div class="input-field">
                         <i class="fa-solid fa-lock"></i>
                         <input type="password" placeholder="Password" name="password">
-        
+
                     </div>
                     <div class="btn-field">
                         <button type="submit">Log in</button>
@@ -33,6 +33,15 @@
             </form>
         </div>
     </div>
+
+    {% if messages %}
+    <script>
+
+        {% for message in messages %}
+        alert("{{message}}");
+        {% endfor %}
+    </script>
+    {% endif %}
 
 </body>
 

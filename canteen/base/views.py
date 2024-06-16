@@ -9,6 +9,7 @@ from django.db.models import Q
 
 from django.conf import settings
 from .tasks import add_users_task
+from django.contrib import messages
 
 # local imports
 from .forms import *
@@ -59,8 +60,10 @@ def login_view(request):
         password = request.POST.get("password")
         user = authenticate(request, college_id=username, password=password)
         if user == None:
-            return HttpResponse("Invalid Credentials")
+            messages.error(request, "invalid username or password")
+            return redirect("login")
         login(request, user)
+        messages.success(request, "Logged in successfully")
         return redirect("home")
     return render(request, "login/login.html")
 

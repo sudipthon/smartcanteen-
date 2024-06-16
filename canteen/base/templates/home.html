@@ -2,14 +2,23 @@
 {% load static %}
 
 {% block content %}
+{% if messages %}
+<script>
+
+    {% for message in messages %}
+    alert("{{message}}");
+    {% endfor %}
+</script>
+{% endif %}
+
 <div>
     {{day_of_week}} {{current_time}}
 
 </div>
-            
-    <div class="menu">
-        <h2>Food Menu</h2>
-        <table>
+
+<div class="menu">
+    <h2>Food Menu</h2>
+    <table>
         <tr>
             <th>Item</th>
             <th>Price/Plate</th>
@@ -19,19 +28,19 @@
             <th>Time</th>
             {% endif%}
             <th>Order</th>
-            
+
         </tr>
         {% for item in menu %}
         <form action="{% url 'create_order' item.id %}" method="POST">
             {% csrf_token %}
-            
+
             <tr>
                 <td>{{ item.name }}</td>
                 <td>{{ item.price }}</td>
                 {% if item.available %}
                 <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt=""></td>
                 <td><input type="number" name="quantity" value="1" id=""></td>
-                
+
                 <td>
                     {% if request.user.administration %}
                     <input type="time" name="order_time" id="">
@@ -42,13 +51,13 @@
                 {% else %}
                 <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt=""></td>
                 {% endif %}
-                
-                
+
+
             </tr>
-            
+
         </form>
         {% endfor %}
-        
+
     </table>
 </div>
 
@@ -62,31 +71,31 @@
             <th>Quantity</th>
             <th>Total</th>
             <th>Action</th>
-            
+
         </tr>
         {% for order in my_orders %}
         {% csrf_token %}
-        
+
         <tr>
             <td>{{ order.menu_item.name }}</td>
             <td>{{ order.menu_item.price }}</td>
             <form action="{% url 'update_order' order.id %}" method="POST">
                 {% csrf_token %}
-                
+
                 <td> <input type="number" name="quantity" id="" value="{{order.quantity}}"></td>
                 <td>Rs {{order.total_cost}}</td>
                 <td>
                     <button type="submit"> Update</button>
-                </form>
+            </form>
             <button> <a href="{% url 'delete_order' order.id%} "> Delete</a></button>
-        </td>
+            </td>
 
-        
-        
-    </tr>
-    {% endfor %}
-    
-</table>
+
+
+        </tr>
+        {% endfor %}
+
+    </table>
 </div>
 
 {% endblock %}

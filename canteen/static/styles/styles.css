@@ -1,5 +1,6 @@
 body{
     background-color: #E0FBE2;
+    /* position: absolute; */
 }
 
 .navbar {
@@ -55,7 +56,6 @@ table {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-    /* border: 1px solid #ddd; */
 }
 table td input {
     background-color: white;
@@ -68,9 +68,8 @@ table td input {
 table th, table td {
     padding: 8px;
     /* text-align: left; */
-    border: 1px solid #ddd;
+    border: 1px solid lightgrey;
     justify-content: center;
-
 }
 
 table tr:hover {

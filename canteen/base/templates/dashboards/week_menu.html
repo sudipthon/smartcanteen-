@@ -38,40 +38,33 @@
         </div>
     </div>
     <table>
-            <h2>Week Menu</h2>
+            <tr>
+                <th>Day</th>
+                <th>Item Name</th>
+                <th>Action</th> 
+            </tr>
+    
+            {% for day in days|slice:':' %}
+            <tr>
+                <td>{{day}}</td>
+                <td>
+                {% for item in day.menu_items.all %}
 
-                <tr>
-                    <th>Day</th>
-                    <th>Item Name</th>
-                    <th>Action</th> 
-                </tr>
-
-                {% for day in days|slice:':' %}
-                
-                
-                <tr>
-                    <td>{{day}}</td>
-                    {% for item in day.menu_items.all %}
-                    <td>
-                        <button>
-                            
-                            {{item}}
-                        </button>
-                        
-                    </td>
-                    {% endfor %}
-                    <td>
-                        <a href="{% url 'update_day_menu' day.id  %}">
-                            
-                            
-                            <button style="background-color: rgb(114, 212, 114);">
-                                Edit
-                            </button>
-                        </a>
-                    </td>
-                </tr>
+                   <li type="none"> {{item}} </li>
+                    
+                  
                 {% endfor %}
-                
+
+                </td>
+                <td>
+                    <a href="{% url 'update_day_menu' day.id  %}">
+                        <button>
+                            Edit
+                        </button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
     </table>
     
     

@@ -63,7 +63,7 @@ def login_view(request):
             messages.error(request, "invalid username or password")
             return redirect("login")
         login(request, user)
-        messages.success(request, "Logged in successfully")
+        # messages.success(request, "Logged in successfully")
         return redirect("home")
     return render(request, "login/login.html")
 

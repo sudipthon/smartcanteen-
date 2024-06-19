@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% load form_filters %}
+
 {% load static %}
 <html>
 
@@ -53,7 +55,10 @@
                             {% for item_name,info in items.items %}
                             <td> {{item_name}} </td>
                             <td> {{info.quantity}} </td>
-                            <td> {{info.price}} </td>
+                            <!-- <td> {{info.price}} </td> -->
+                            <td>{{ info.quantity|multiply:info.price }}</td>
+
+
                         </tr>
                         {% endfor %}
                     </table>

@@ -1,12 +1,11 @@
 # django imports
-from django.shortcuts import render, HttpResponse, redirect
-from .models import *
+from django.shortcuts import render,redirect
+from .models import Menu, Orders, Course, Student, Administration, BreakTime, CustomUser, FoodItem
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
-
 from django.conf import settings
 from .tasks import add_users_task
 from django.contrib import messages
@@ -14,7 +13,7 @@ from django.contrib import messages
 # local imports
 from .forms import *
 
-from .decorators import *
+from .decorators import check_admin, check_staff, check_student_teacher
 
 # python imports
 import os
@@ -56,9 +55,9 @@ def login_view(request):
     returns: redirects logged in user to home url
     """
     if request.method == "POST":
-        username = request.POST.get("username")
+        user_id = request.POST.get("user_id")
         password = request.POST.get("password")
-        user = authenticate(request, college_id=username, password=password)
+        user = authenticate(request, college_id=user_id, password=password)
         if user == None:
             messages.error(request, "invalid username or password")
             return redirect("login")

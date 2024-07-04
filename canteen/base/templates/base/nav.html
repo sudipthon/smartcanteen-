@@ -1,4 +1,9 @@
 {% load static %}
+<style>
+    .active {
+        background-color: lightblue;
+    }
+</style>
 <nav class="main">
     <div class="navbar">
         <nav>
@@ -13,8 +18,13 @@
                         <img id="logo" src="{%static 'images/icons/image.png' %}" alt="">
                     </div>
                 </li>
-                <li><a class="{% if request.path == '' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
-                <li><a href="user.html">Profile</a></li>
+                <li><a class="{% if request.path == '/home/' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
+                <!-- <li><a href="{% url 'menu' %}">Menu</a></li> -->
+                <li><a class="{% if request.path == '/menu/' %}active{% endif %}"
+                    href="{%url 'menu'%}">Menu</a></li>
+                <!-- <li><a href="{% url 'profile' %}">Profile</a></li> -->
+                <li><a class="{% if request.path == '/profile/' %}active{% endif %}"
+                    href="{%url 'profile'%}">Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
         </nav>

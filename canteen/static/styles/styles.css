@@ -1,6 +1,6 @@
 body{
     background-color: #E0FBE2;
-    /* position: absolute; */
+    /* position: absolute;*/
 }
 
 .navbar {
@@ -116,6 +116,158 @@ button a{
     cursor: pointer;
     margin-right: 10px;
 }
+
+
+/* body {
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.navbar {
+    background-color: #044c97;
+    width: 180px;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+}
+
+.navbar nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+.navbar nav ul li {
+    margin-bottom: 10px;
+}
+
+.navbar nav ul li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.navbar nav ul li a:hover {
+    background-color: #f2f2f2;
+    color: #044c97;
+}
+
+.navbar nav ul li #brand {
+    flex-direction: column;
+}
+
+#logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.menu {
+    padding-left: 200px;
+    padding-right: 20px;
+}
+
+table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #044c97;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+table td input {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 90%;
+    border-radius: 4px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+table button {
+    background-color: #044c97;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+table button:hover {
+    background-color: #03376b;
+}
+
+button a {
+    text-decoration: none;
+    color: white;
+}
+
+#availability {
+    height: 20px;
+}
+
+.add_items {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.add_items input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.add_items button {
+    background-color: #044c97;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add_items button:hover {
+    background-color: #03376b;
+} */
+
 
 
 /* login */

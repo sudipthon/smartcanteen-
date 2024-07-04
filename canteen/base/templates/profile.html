@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="orders">
+    <h2>My Orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price/Plate</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.menu_item.name }}</td>
+                <td>{{ order.menu_item.price }}</td>
+                <form action="{% url 'update_order' order.id %}" method="POST">
+                    {% csrf_token %}
+                    <td><input type="number" name="quantity" value="{{ order.quantity }}" min="1"></td>
+                    <td>Rs {{ order.total_cost }}</td>
+                    <td>
+                        <button type="submit">Update</button>
+                        <button><a href="{% url 'delete_order' order.id %}">Delete</a></button>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

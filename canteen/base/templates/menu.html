@@ -1,0 +1,63 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- {% if messages %}
+<script>
+
+    {% for message in messages %}
+    alert("{{message}}");
+    {% endfor %}
+</script>
+{% endif %} -->
+
+<div>
+    {{day_of_week}} {{current_time}}
+
+</div>
+
+<div class="menu">
+    <h2>Food Menu</h2>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Price/Plate</th>
+            <th>Available</th>
+            <th>Quantity</th>
+            {% if request.user.administration %}
+            <th>Time</th>
+            {% endif%}
+            <th>Order</th>
+
+        </tr>
+        {% for item in menu %}
+        <form action="{% url 'create_order' item.id %}" method="POST">
+            {% csrf_token %}
+
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}</td>
+                {% if item.available %}
+                <td><img id="availability" src="{%static 'images/icons/right.png'%}" alt=""></td>
+                <td><input type="number" name="quantity" value="1" id=""></td>
+
+                <td>
+                    {% if request.user.administration %}
+                    <input type="time" name="order_time" id="">
+
+                    {% endif%}
+                    <button type="submit">Order</button>
+                </td>
+                {% else %}
+                <td><img id="availability" src="{%static 'images/icons/wrong.png'%}" alt=""></td>
+                {% endif %}
+
+
+            </tr>
+
+        </form>
+        {% endfor %}
+
+    </table>
+</div>
+{% endblock %}

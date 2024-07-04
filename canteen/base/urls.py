@@ -2,12 +2,14 @@ from .views import *
 from django.urls import path
 
 urlpatterns = [
-    path("", home, name="home"),
+    path("home/", home, name="home"),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
     path("delete_user/<int:pk>", delete_user, name="delete_user"),
     path("change_password/", change_password, name="change_password"),
     path("change_password/<int:pk>", change_password, name="change_password"),
+    path("profile/", profile, name="profile"),
+    path("menu/",menu,name="menu"),
 
     #
     path("delete_order/<int:pk>", delete_order, name="delete_order"),

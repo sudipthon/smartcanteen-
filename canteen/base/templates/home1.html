@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="home">
+    
+</div>
+<!-- <div class="current-time">
+    {{ day_of_week }} {{ current_time }}
+</div>
+
+<div class="menu">
+    <h2>Food Menu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price/Plate</th>
+                <th>Available</th>
+                <th>Quantity</th>
+                {% if request.user.administration %}
+                <th>Time</th>
+                {% endif %}
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in menu %}
+            <form action="{% url 'create_order' item.id %}" method="POST">
+                {% csrf_token %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>
+                        <img id="availability" src="{% static 'images/icons/right.png' if item.available else 'images/icons/wrong.png' %}" alt="">
+                    </td>
+                    <td><input type="number" name="quantity" value="1" min="1"></td>
+                    {% if request.user.administration %}
+                    <td><input type="time" name="order_time"></td>
+                    {% endif %}
+                    <td><button type="submit">Order</button></td>
+                </tr>
+            </form>
+            {% endfor %}
+        </tbody>
+    </table>
+</div> -->
+{% endblock %}

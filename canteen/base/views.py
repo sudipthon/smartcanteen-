@@ -29,20 +29,43 @@ def home(request):
     returns: user to their respective dashboard by checking their user type with the help of decorator
 
     """
+    # time_zone = timezone.now()
+    # day_of_week = time_zone.strftime("%A")
+    # current_time = time_zone
+    # day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
+    # menu_items = day_menu.menu_items.all()
+    # my_orders = Orders.objects.filter(user=request.user)
+    # context = {
+    #     "menu": menu_items,
+    #     "current_time": time_zone,
+    #     "day_of_week": day_of_week,
+    #     "my_orders": my_orders,
+    # }
+    return render(request, "home1.html")#,context
+
+@login_required(login_url="login")
+@check_student_teacher
+
+def profile(request):
+    orders = Orders.objects.filter(user=request.user)
+    return render(request, "profile.html", {"orders": orders})
+
+@login_required(login_url="login")
+@check_student_teacher
+def menu(request):
     time_zone = timezone.now()
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
     menu_items = day_menu.menu_items.all()
-    my_orders = Orders.objects.filter(user=request.user)
     context = {
         "menu": menu_items,
         "current_time": time_zone,
         "day_of_week": day_of_week,
-        "my_orders": my_orders,
     }
-    return render(request, "home.html", context)
-
+    return render(request, "menu.html", context)    
+      
+   
 
 def logout_view(request):
     logout(request)
@@ -221,7 +244,7 @@ def list_users(request):
 def delete_order(request, pk):
     order = Orders.objects.get(pk=pk)
     order.delete()
-    return redirect("home")
+    return redirect("profile")
 
 
 @login_required(login_url="login")
@@ -232,7 +255,7 @@ def update_order(request, pk):
         quantity = request.POST.get("quantity")
         order.quantity = quantity
         order.save()
-        return redirect("home")
+        return redirect("profile")
 
 
 @login_required(login_url="login")
@@ -414,4 +437,4 @@ def create_order(request, pk):
         )
         order.full_clean()
         order.save()
-    return redirect("home")
+    return redirect("menu")

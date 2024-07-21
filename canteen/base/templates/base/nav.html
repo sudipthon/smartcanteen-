@@ -12,16 +12,12 @@
                     <div id="brand">
 
                         <h2>
-                            
                             Smart Canteen
                         </h2>
                         <img id="logo" src="{%static 'images/icons/image.png' %}" alt="">
                     </div>
                 </li>
                 <li><a class="{% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">Home</a></li>
-                <!-- <li><a href="{% url 'menu' %}">Menu</a></li> -->
-                <li><a class="{% if request.path == '/menu/' %}active{% endif %}"
-                    href="{%url 'menu'%}">Menu</a></li>
                 <!-- <li><a href="{% url 'profile' %}">Profile</a></li> -->
                 <li><a class="{% if request.path == '/profile/' %}active{% endif %}"
                     href="{%url 'profile'%}">Profile</a></li>

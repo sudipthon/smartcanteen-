@@ -29,19 +29,19 @@ def home(request):
     returns: user to their respective dashboard by checking their user type with the help of decorator
 
     """
-    # time_zone = timezone.now()
-    # day_of_week = time_zone.strftime("%A")
-    # current_time = time_zone
-    # day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
-    # menu_items = day_menu.menu_items.all()
-    # my_orders = Orders.objects.filter(user=request.user)
-    # context = {
-    #     "menu": menu_items,
-    #     "current_time": time_zone,
-    #     "day_of_week": day_of_week,
-    #     "my_orders": my_orders,
-    # }
-    return render(request, "home1.html")#,context
+    time_zone = timezone.now()
+    day_of_week = time_zone.strftime("%A")
+    current_time = time_zone
+    day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
+    menu_items = day_menu.menu_items.all()
+    my_orders = Orders.objects.filter(user=request.user)
+    context = {
+        "menu": menu_items,
+        "current_time": time_zone,
+        "day_of_week": day_of_week,
+        "my_orders": my_orders,
+    }
+    return render(request, "home1.html",context)
 
 @login_required(login_url="login")
 @check_student_teacher
@@ -49,21 +49,7 @@ def home(request):
 def profile(request):
     orders = Orders.objects.filter(user=request.user)
     return render(request, "profile.html", {"orders": orders})
-
-@login_required(login_url="login")
-@check_student_teacher
-def menu(request):
-    time_zone = timezone.now()
-    day_of_week = time_zone.strftime("%A")
-    current_time = time_zone
-    day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
-    menu_items = day_menu.menu_items.all()
-    context = {
-        "menu": menu_items,
-        "current_time": time_zone,
-        "day_of_week": day_of_week,
-    }
-    return render(request, "menu.html", context)    
+ 
       
    
 
@@ -437,4 +423,4 @@ def create_order(request, pk):
         )
         order.full_clean()
         order.save()
-    return redirect("menu")
+    return redirect("home")

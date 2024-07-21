@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff</title>
-    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/styles1.css' %}">
     <style>
         .active {
-            background-color:#8b1304;
+            background-color:lightblue;
         }
     </style>
 </head>
@@ -37,24 +37,26 @@
             </nav>
         </div>
     </div>
-    <table>
+    <div class="menu">
+
+        <table>
             <tr>
                 <th>Day</th>
                 <th>Item Name</th>
                 <th>Action</th> 
             </tr>
-    
+            
             {% for day in days|slice:':' %}
             <tr>
                 <td>{{day}}</td>
                 <td>
-                {% for item in day.menu_items.all %}
-
-                   <li type="none"> {{item}} </li>
+                    {% for item in day.menu_items.all %}
                     
-                  
-                {% endfor %}
-
+                    <li type="none"> {{item}} </li>
+                    
+                    
+                    {% endfor %}
+                    
                 </td>
                 <td>
                     <a href="{% url 'update_day_menu' day.id  %}">
@@ -65,9 +67,10 @@
                 </td>
             </tr>
             {% endfor %}
-    </table>
-    
-    
-</body>
+        </table>
+        
+    </div>
+        
+    </body>
 
-</html>
+    </html>

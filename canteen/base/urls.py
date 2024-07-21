@@ -9,7 +9,7 @@ urlpatterns = [
     path("change_password/", change_password, name="change_password"),
     path("change_password/<int:pk>", change_password, name="change_password"),
     path("profile/", profile, name="profile"),
-    path("menu/",menu,name="menu"),
+
 
     #
     path("delete_order/<int:pk>", delete_order, name="delete_order"),

@@ -6,10 +6,10 @@
 
 <head>
     <title>Orders</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles1.css'%}">
     <style>
         .active {
-            background-color: #8b1304;
+            background-color: lightblue;
         }
     </style>
 </head>
@@ -55,7 +55,6 @@
                             {% for item_name,info in items.items %}
                             <td> {{item_name}} </td>
                             <td> {{info.quantity}} </td>
-                            <!-- <td> {{info.price}} </td> -->
                             <td>{{ info.quantity|multiply:info.price }}</td>
 
 

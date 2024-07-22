@@ -1,7 +1,9 @@
 docker build . -t <image_name>
     docker build . -t <image_name>:<tag>
     docker build . -t <image_name>:<tag> -f <Dockerfile_name>
-docker run <inageid>/<>
+running image
+    docker run <inageid>
+
 
 docker-compose build
 build using no cache
@@ -65,3 +67,54 @@ To push your image, you should tag it with your Docker Hub username, like so:
 
 docker tag <image_id> <username>/<repository>:<tag>
 docker push yourusername/canteen:latest
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Building Docker Images
+docker build . -t <image_name>
+docker build . -t <image_name>:<tag>
+docker build . -t <image_name>:<tag> -f <Dockerfile_name>
+
+# Running Containers
+docker run <image_id>
+docker run -it <image_id> /bin/bash # or /bin/sh for interactive shell
+docker run -p <host_port>:<container_port> <image_id> # Port mapping
+docker run -it --rm <image_name> ls /app/ # Listing directory inside container
+
+# Docker Compose Commands
+docker-compose build
+docker-compose build --no-cache # Build using no cache
+docker-compose up
+docker-compose down # Stopping container
+docker-compose up -d # Detached mode
+docker-compose logs -f web # Logs for Django
+docker-compose logs -f celery # Logs for Celery
+docker-compose logs -f rabbitmq # Logs for RabbitMQ
+
+# Managing Docker Images
+docker images # or docker image ls - List images
+docker images -q # List only IDs of images
+docker rmi -f <image_id> # Removing a specific image
+docker rmi -f $(docker images -q) # Remove all images at once
+
+# Managing Docker Containers
+docker ps -a # or docker container ls -a - List containers
+docker rm -f <container_id> # Remove container
+
+# Docker System Commands
+sudo systemctl start docker # Start Docker
+sudo systemctl restart docker # Restart Docker
+
+# Docker Hub Commands
+docker tag <image_id> <username>/<repository>:<tag> # Tagging an image
+docker push <username>/<repository>:<tag> # Pushing an image to Docker Hub

@@ -3,10 +3,12 @@
 
 {% block content %}
 
-
 <div class="current-time">
-    {{ day_of_week }} {{ current_time }}
+    <p>{{ day_of_week }} {{ current_time }}</p>
+    <p>Hello, {{ request.user.username }}!</p>
+    <p>Breaktime: {{ breaktime.start_time }} -{{ breaktime.end_time }}</p>
 </div>
+
 
 <div class="menu">
     <h2>Food Menu</h2>
@@ -14,7 +16,7 @@
         <thead>
             <tr>
                 <th>Item</th>
-                <th>Price/Plate</th>
+                <th>Price/Plate</th> 
                 <th>Available</th>
                 <th>Quantity</th>
                 {% if request.user.administration %}

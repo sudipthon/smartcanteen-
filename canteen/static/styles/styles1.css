@@ -42,9 +42,9 @@ body {
 }
 
 .current-time {
-    /* text-align: right; */
     margin: 10px;
-    font-size: 14px;
+    font-size: 14px bold;
+    /* text-align: center; */
 }
 
 .menu, .orders, .routine, .user-section, .user{

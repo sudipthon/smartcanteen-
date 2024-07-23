@@ -33,6 +33,7 @@ def home(request):
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
+    breaktime = BreakTime.objects.get(course=request.user.student.course, semester=request.user.student.semester)
     menu_items = day_menu.menu_items.all()
     my_orders = Orders.objects.filter(user=request.user)
     context = {
@@ -40,6 +41,7 @@ def home(request):
         "current_time": time_zone,
         "day_of_week": day_of_week,
         "my_orders": my_orders,
+        "breaktime": breaktime,
     }
     return render(request, "home1.html",context)
 
@@ -201,10 +203,12 @@ def list_users(request):
     teachers = Administration.objects.filter(user_type="Teacher").order_by(
         "user__college_id"
     )[:7]
+    staffs = Administration.objects.filter(user_type="Staff").order_by("user__college_id")[:7]
     students = Student.objects.all()
     courses = Course.objects.all()
     teacher_query = request.GET.get("search_teacher", "")
     student_query = request.GET.get("search_student", "")
+    staff_query = request.GET.get("search_staff", "")
     if teacher_query:
         teachers = Administration.objects.filter(user_type="Teacher").filter(
             Q(user__college_id__icontains=teacher_query)
@@ -215,10 +219,15 @@ def list_users(request):
             Q(user__college_id__icontains=student_query)
             | Q(user__username__icontains=student_query)
         )
+    if staff_query:
+        staffs = Administration.objects.filter(user_type="Staff").filter(
+            Q(user__college_id__icontains=staff_query)
+            | Q(user__username__icontains=staff_query)
+        )
 
     courses = Course.objects.all()
 
-    context = {"students": students, "teachers": teachers, "courses": courses}
+    context = {"students": students, "teachers": teachers, "staffs": staffs, "courses": courses}
     return render(request, "dashboards/admin/users_list.html", context)
 
 
@@ -231,6 +240,7 @@ def delete_order(request, pk):
     order = Orders.objects.get(pk=pk)
     order.delete()
     return redirect("profile")
+
 
 
 @login_required(login_url="login")
@@ -424,3 +434,5 @@ def create_order(request, pk):
         order.full_clean()
         order.save()
     return redirect("home")
+
+

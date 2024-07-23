@@ -1,6 +1,15 @@
 # django imports
-from django.shortcuts import render,redirect
-from .models import Menu, Orders, Course, Student, Administration, BreakTime, CustomUser, FoodItem
+from django.shortcuts import render, redirect, HttpResponse
+from .models import (
+    Menu,
+    Orders,
+    Course,
+    Student,
+    Administration,
+    BreakTime,
+    CustomUser,
+    FoodItem,
+)
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,6 +17,8 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.conf import settings
 from .tasks import add_users_task
+from datetime import datetime
+import pytz
 from django.contrib import messages
 
 # local imports
@@ -33,7 +44,9 @@ def home(request):
     day_of_week = time_zone.strftime("%A")
     current_time = time_zone
     day_menu = Menu.objects.get(day_of_week=day_of_week[:2].upper())
-    breaktime = BreakTime.objects.get(course=request.user.student.course, semester=request.user.student.semester)
+    breaktime = BreakTime.objects.get(
+        course=request.user.student.course, semester=request.user.student.semester
+    )
     menu_items = day_menu.menu_items.all()
     my_orders = Orders.objects.filter(user=request.user)
     context = {
@@ -43,17 +56,15 @@ def home(request):
         "my_orders": my_orders,
         "breaktime": breaktime,
     }
-    return render(request, "home1.html",context)
+    return render(request, "home1.html", context)
+
 
 @login_required(login_url="login")
 @check_student_teacher
-
 def profile(request):
     orders = Orders.objects.filter(user=request.user)
     return render(request, "profile.html", {"orders": orders})
- 
-      
-   
+
 
 def logout_view(request):
     logout(request)
@@ -140,6 +151,8 @@ def delete_breaktime(request, pk):
     return redirect("canteen_admin")
 
 
+@login_required(login_url="login")
+@check_admin
 def add_users(request):
     """
     if user chose to add users via file, then file is uploaded and saved in media folder and the celery task is called to add users to the database
@@ -203,7 +216,9 @@ def list_users(request):
     teachers = Administration.objects.filter(user_type="Teacher").order_by(
         "user__college_id"
     )[:7]
-    staffs = Administration.objects.filter(user_type="Staff").order_by("user__college_id")[:7]
+    staffs = Administration.objects.filter(user_type="Staff").order_by(
+        "user__college_id"
+    )[:7]
     students = Student.objects.all()
     courses = Course.objects.all()
     teacher_query = request.GET.get("search_teacher", "")
@@ -227,34 +242,17 @@ def list_users(request):
 
     courses = Course.objects.all()
 
-    context = {"students": students, "teachers": teachers, "staffs": staffs, "courses": courses}
+    context = {
+        "students": students,
+        "teachers": teachers,
+        "staffs": staffs,
+        "courses": courses,
+    }
     return render(request, "dashboards/admin/users_list.html", context)
 
 
-########Staff
-
-
 @login_required(login_url="login")
-@check_student_teacher
-def delete_order(request, pk):
-    order = Orders.objects.get(pk=pk)
-    order.delete()
-    return redirect("profile")
-
-
-
-@login_required(login_url="login")
-@check_student_teacher
-def update_order(request, pk):
-    order = Orders.objects.get(pk=pk)
-    if request.method == "POST":
-        quantity = request.POST.get("quantity")
-        order.quantity = quantity
-        order.save()
-        return redirect("profile")
-
-
-@login_required(login_url="login")
+@check_admin
 def delete_user(request, pk):
     user = CustomUser.objects.get(pk=pk)
     # Get the previous URL
@@ -263,6 +261,8 @@ def delete_user(request, pk):
     return redirect(previous_url)
 
 
+@login_required(login_url="login")
+@check_admin
 def change_password(request, pk=None):
     if pk:
         user = CustomUser.objects.get(pk=pk)
@@ -271,7 +271,7 @@ def change_password(request, pk=None):
         user = CustomUser.objects.get(pk=request.session.get("user_id"))
 
     if request.method == "POST":
-        pk=request.session.get("user_id")
+        pk = request.session.get("user_id")
         user = CustomUser.objects.get(pk=request.session.get("user_id"))
         password = request.POST.get("password")
         user.set_password(password)
@@ -280,6 +280,92 @@ def change_password(request, pk=None):
             del request.session["user_id"]
         return redirect(home)
     return render(request, "dashboards/change_password.html", {"user": user})
+
+
+########student & teacher
+
+##utiility function
+def time_difference(order_time):
+    date_time = timezone.now()
+    current_time=timezone.localtime(date_time).strftime("%H:%M:%S")
+    # current_time = "11:00:00"  # dummy time for testing
+    format = "%H:%M:%S"
+    time_difference = datetime.strptime(order_time, format) - datetime.strptime(
+        current_time, format
+    )
+    hours_difference = time_difference.total_seconds() / 3600
+    return hours_difference
+
+
+@login_required(login_url="login")
+@check_student_teacher
+def create_order(request, pk):
+    if request.method == "POST":
+        item = FoodItem.objects.get(pk=pk)
+        quantity = request.POST.get("quantity")
+        user = request.user
+        order_time = request.POST.get("order_time")
+
+        if hasattr(user, "student"):
+            order_time = str(
+                user.student.course.course_breaktimes.get(
+                    semester=user.student.semester
+                ).start_time
+            )
+        hours_difference = time_difference(order_time)
+        if hours_difference >= 1:
+            order = Orders(
+                user=user,
+                menu_item=item,
+                quantity=quantity,
+                order_time=order_time,
+            )
+            order.full_clean()
+            order.save()
+        # condition if the order time is less than 1 hour
+        return redirect("home")
+
+
+@login_required(login_url="login")
+@check_student_teacher
+def update_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    user = request.user
+    if hasattr(user, "student"):
+        order_time = str(
+            user.student.course.course_breaktimes.get(
+                semester=user.student.semester
+            ).start_time
+        )
+    hours_difference = time_difference(order_time)
+    if hours_difference >= 1:
+
+        if request.method == "POST":
+
+            quantity = request.POST.get("quantity")
+            order.quantity = quantity
+            order.save()
+            return redirect("profile")
+    # condition if the order time is less than 1 hour
+    return redirect("profile")
+
+
+@login_required(login_url="login")
+@check_student_teacher
+def delete_order(request, pk):
+    order = Orders.objects.get(pk=pk)
+    user = request.user
+    if hasattr(user, "student"):
+        order_time = str(
+            user.student.course.course_breaktimes.get(
+                semester=user.student.semester
+            ).start_time
+        )
+        hours_difference = time_difference(order_time)
+        if hours_difference >= 1:
+            order.delete()
+
+    return redirect("profile")
 
 
 @login_required(login_url="login")
@@ -410,29 +496,3 @@ def list_orders(request):
     context = {"orders": orders_dict, "breaktimes": breaktimes}
 
     return render(request, "dashboards/orders.html", context)
-
-
-@login_required(login_url="login")
-@check_student_teacher
-def create_order(request, pk):
-    if request.method == "POST":
-        item = FoodItem.objects.get(pk=pk)
-        quantity = request.POST.get("quantity")
-        user = request.user
-        order_time = request.POST.get("order_time")
-        if hasattr(user, "student"):
-            order_time = user.student.course.course_breaktimes.get(
-                semester=user.student.semester
-            ).start_time
-
-        order = Orders(
-            user=user,
-            menu_item=item,
-            quantity=quantity,
-            order_time=order_time,
-        )
-        order.full_clean()
-        order.save()
-    return redirect("home")
-
-

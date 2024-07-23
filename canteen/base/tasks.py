@@ -3,7 +3,11 @@ from .models import CustomUser, Student, Course, Administration
 import pandas as pd
 from django.db import IntegrityError
 import os
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @shared_task
 def add_users_task(file_path, user_type):
@@ -29,7 +33,7 @@ def add_users_task(file_path, user_type):
             user.save()  # save the user to generate an ID
             users.append(user)
 
-            if user_type == "student":
+            if user_type == "Student":
                 course = Course.objects.get(name=row["Course"])
                 student = Student(
                     user=user,
@@ -43,8 +47,17 @@ def add_users_task(file_path, user_type):
                     user_type=user_type,
                 )
                 admin.save()
-        except IntegrityError:
+        except Exception as e:
             error_users.append(row["Name"])
+            # error_info = row.to_dict()
+            # error_info["Error"] = str(e)
+            # error_users.append(error_info)
+
 
         with open("error_users.txt", "w") as f:
             f.write("\n".join(error_users))
+
+#   # Write error users to an Excel file if there are any
+#     if error_users:
+#         error_df = pd.DataFrame(error_users)
+#         error_df.to_excel("error_users.xlsx", index=False)

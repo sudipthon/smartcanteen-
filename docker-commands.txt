@@ -1,6 +1,8 @@
 docker build . -t <image_name>
     docker build . -t <image_name>:<tag>
     docker build . -t <image_name>:<tag> -f <Dockerfile_name>
+    docker-compose build --no-cache
+
 running image
     docker run <inageid>
 

@@ -26,7 +26,8 @@
             </div>
           </li>
           <li><a href="{% url 'canteen_admin' %}">Home</a></li>
-          <li><a class="{% if request.path == '/add_users' %}active{% endif %}" href="{% url 'add_users'%}">Add User</a></li>
+          <li><a class="{% if request.path == '/add_users' %}active{% endif %}" href="{% url 'add_users'%}">Add User</a>
+          </li>
           <li><a href="{% url 'list_users'%}">Users</a></li>
           <!-- <li><a href="admin.html">Settings</a></li> -->
           <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -37,7 +38,7 @@
 
 
     <div class="user">
-    <center>
+      <center>
 
 
 
@@ -50,52 +51,52 @@
             <option value="file">File</option>
             <option value="manual">Manual</option>
           </select>
-          
+
           <br>
           <label for="">User Type</label>
           <select name="user_type" id="">
             <option value="Student">Student</option>
-          <option value="Teacher">Teacher</option>
-          <option value="Staff">Staff</option>
-        </select>
-        <br>
-        
-        <div class="file">
-          <label for="">File</label>
-          <input type="file" name="file" id="">
-        </div>
-        <br>
-        
-        <div class="manual">
-          <label for="">ID:</label>
-          <input type="text" name="college_id" id="">
+            <option value="Teacher">Teacher</option>
+            <option value="Staff">Staff</option>
+          </select>
           <br>
-          <label for="">Username:</label>
-          <input type="text" name="username" id="">
+
+          <div class="file">
+            <label for="">File</label>
+            <input type="file" name="file" id="">
+          </div>
           <br>
-          <label for="">Password:</label>
-          <input type="text" name="password" id="">
-          <br>
-        </div>
-        <div class="manual_student">
-          <label for="">Course:</label>
-          <select name="course" id="">
-            {%for course in courses %}
-            <option value="{{course.name}}">{{course.name}}</option>
-            {%endfor%}
-          </select><br>
-          <label for="">Semester:</label>
-          <input type="number" name="semester" id="">
-          
-        </div>
-        <button type="submit">Upload</button>
-      </form>
-      
-    </center>
-  </div>
-    
-    
-    
+
+          <div class="manual">
+            <label for="">ID:</label>
+            <input type="text" name="college_id" id="">
+            <br>
+            <label for="">Username:</label>
+            <input type="text" name="username" id="">
+            <br>
+            <label for="">Password:</label>
+            <input type="text" name="password" id="">
+            <br>
+          </div>
+          <div class="manual_student">
+            <label for="">Course:</label>
+            <select name="course" id="">
+              {%for course in courses %}
+              <option value="{{course.name}}">{{course.name}}</option>
+              {%endfor%}
+            </select><br>
+            <label for="">Semester:</label>
+            <input type="number" name="semester" id="">
+
+          </div>
+          <button type="submit">Upload</button>
+        </form>
+
+      </center>
+    </div>
+
+
+
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         var inputTypeSelect = document.querySelector('select[name="input_type"]');

@@ -6,7 +6,6 @@ def check_student_teacher(function):
     def wrap(request, *args, **kwargs):
         user = request.user
         if not hasattr(user, "student") and not hasattr(user, "administration"):
-            # return HttpResponse("You are not authorized to view this page")
             return redirect("login")
 
         if hasattr(user, "administration"):
@@ -25,7 +24,6 @@ def check_admin(function):
     def wrap(request, *args, **kwargs):
         user = request.user
         if not hasattr(user, "student") and not hasattr(user, "administration"):
-            # return HttpResponse("You are not authorized to view this page")
             return redirect("login")
 
         if hasattr(user, "student"):
@@ -35,8 +33,6 @@ def check_admin(function):
             admin = user.administration
             if admin.user_type == "Staff":
                 return redirect("staff")
-            # else:
-            #     return redirect("canteen_admin")
 
         return function(request, *args, **kwargs)
 

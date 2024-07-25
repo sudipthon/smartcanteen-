@@ -79,12 +79,7 @@ def login_view(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
         password = request.POST.get("password")
-        # user = authenticate(request, username=user_id, password=password)
         
-        # if user_id.exists():
-        #     messages.error(request, "User with this college ID already exists.")
-        #     return redirect("login")
-        # Check if the user ID exists in the database
         if not CustomUser.objects.filter(college_id=user_id).exists():
             messages.error(request, "User with this college ID does not exist.")
             return redirect("login")
@@ -303,8 +298,8 @@ def change_password(request, pk=None):
 ##utiility function
 def time_difference(order_time):
     date_time = timezone.now()
-    current_time=timezone.localtime(date_time).strftime("%H:%M:%S")
-    # current_time = "11:00:00"  # dummy time for testing
+    # current_time=timezone.localtime(date_time).strftime("%H:%M:%S")
+    current_time = "12:00:00"  # dummy time for testing
     format = "%H:%M:%S"
     time_difference = datetime.strptime(order_time, format) - datetime.strptime(
         current_time, format

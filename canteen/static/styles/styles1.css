@@ -44,7 +44,6 @@ body {
 .current-time {
     margin: 10px;
     font-size: 14px bold;
-    /* text-align: center; */
 }
 
 .menu, .orders, .routine, .user-section, .user{
@@ -61,11 +60,6 @@ h2 {
     margin-bottom: 20px;
     color: black;
 }
-
-/* table {
-    width: 100%;
-    border-collapse: collapse;
-} */
 
 table {
     margin-top: 20px;
@@ -148,11 +142,9 @@ img#availability {
     background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(/static/images/icons/image.png);
     background-size: cover;
     background-position: center;
-    /* position: relative; */
 }
 
 .form{
-    /* width: 90%; */
     max-width: 450px;
     position:absolute;
     top: 50%;

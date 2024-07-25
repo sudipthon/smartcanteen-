@@ -1,10 +1,6 @@
 from django.contrib import admin
 from .models import Course, Student, Menu, Orders, FoodItem, Administration, BreakTime, CustomUser
 
-# class Inlin
-
-# class UserProfileAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'role', 'course', 'semester')
 
 
 class OrdersAdmin(admin.ModelAdmin):
@@ -13,7 +9,7 @@ class OrdersAdmin(admin.ModelAdmin):
         "menu_item",
         "order_date",
     )
-    # fields = ('user', 'menu_item', 'order_date',)
+   
     readonly_fields = ("order_date",)
 
 class StudentAdmin(admin.ModelAdmin):

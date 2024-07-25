@@ -145,11 +145,6 @@ class Orders(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.menu_item.name}"
-    
-    # def save(self, *args, **kwargs):
-    #     if self.order_date<timezone.now().date():
-    #         raise ValidationError("Order date cannot be in the past")
-    #     super(Orders, self).save(*args, **kwargs)
 
 
 class BreakTime(models.Model):

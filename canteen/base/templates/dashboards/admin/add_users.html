@@ -131,7 +131,18 @@
         // Call the function once to set the initial visibility
         updateDivVisibility();
       });
+
     </script>
+
+    {% if messages %}
+    <script>
+
+      {% (for message in messages %)}
+      alert("{{message}}");
+      {% endfor %}
+
+    </script>
+    {% endif %}
 
     <body>
 

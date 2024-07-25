@@ -79,12 +79,22 @@ def login_view(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
         password = request.POST.get("password")
-        user = authenticate(request, college_id=user_id, password=password)
+        # user = authenticate(request, username=user_id, password=password)
+        
+        # if user_id.exists():
+        #     messages.error(request, "User with this college ID already exists.")
+        #     return redirect("login")
+        # Check if the user ID exists in the database
+        if not CustomUser.objects.filter(college_id=user_id).exists():
+            messages.error(request, "User with this college ID does not exist.")
+            return redirect("login")
+    
+        user = authenticate(request, username=user_id, password=password)
+
         if user == None:
-            messages.error(request, "invalid username or password")
+            messages.error(request, "invalid userid or password")
             return redirect("login")
         login(request, user)
-        # messages.success(request, "Logged in successfully")
         return redirect("home")
     return render(request, "login/login.html")
 
@@ -182,6 +192,12 @@ def add_users(request):
         college_id = request.POST.get("college_id")
         username = request.POST.get("username")
         password = request.POST.get("password")
+        
+        # check for existing users
+        if CustomUser.objects.filter(college_id=college_id).exists():
+            messages.error(request, "User with this college ID already exists.")
+            return redirect("add_users")
+        
         user = CustomUser.objects.create(
             college_id=college_id, username=username, password=password
         )

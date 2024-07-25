@@ -137,8 +137,8 @@
     {% if messages %}
     <script>
 
-      {% (for message in messages %)}
-      alert("{{message}}");
+      {% for message in messages %}
+        alert("{{message}}");
       {% endfor %}
 
     </script>

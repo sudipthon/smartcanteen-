@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+  <head>
+    <title>Admin</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/styles1.css'%}"
+    />
+    <style>
+      .active {
+        background-color: lightblue;
+      }
 
-<head>
-  <title>Admin</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'styles/styles1.css'%}">
-  <style>
-    .active {
-      background-color: lightblue;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
+      .user-section {
+        width: 80%;
+        /* border: 1px solid black; */
+        padding: 10px;
+        margin: 100px;
+        /* flex-direction: row; */
+      }
+    </style>
+  </head>
 
-<body>
-  <div class="main">
- 
-    <div class="navbar">
+  <body>
+    <div class="main">
+      <div class="navbar">
         <nav>
           <ul>
             <li id="brand">
@@ -45,17 +52,10 @@
           </ul>
         </nav>
       </div>
-
-    <div>
-      <label for="user_type_select">Select User Type:</label>
-      <select id="user_type_select">
-        <option value="students">Students</option>
-        <option value="teachers">Teachers</option>
-        <option value="staffs">Staffs</option>
-      </select>
     </div>
 
-    <div class="students hidden">
+    <br /><br /><br />
+    <div class="students">
       <div class="user-section">
         <h2>Student</h2>
         <div class="search-section">
@@ -64,6 +64,7 @@
             <button type="submit">Search</button>
           </form>
         </div>
+
         <div>
           <table>
             <tr>
@@ -75,12 +76,12 @@
             </tr>
             {% for student in students %}
             <tr>
-              <td>{{ student.user.college_id }}</td>
-              <td>{{ student.user.username }}</td>
-              <td>{{ student.course }}</td>
-              <td>{{ student.semester }}</td>
+              <td>{{student.user.college_id}}</td>
+              <td>{{student.user.username}}</td>
+              <td>{{student.course}}</td>
+              <td>{{student.semester}}</td>
               <td>
-                <a href="{% url 'change_password' student.user.pk %}">
+                <a href="{% url 'change_password' student.user.pk  %}">
                   <button>Change Password</button>
                 </a>
                 <a href="{% url 'delete_user' student.user.pk %}">
@@ -94,15 +95,18 @@
       </div>
     </div>
 
-    <div class="teachers hidden">
+    <br /><br /><br /><br /><br />
+    <div class="teachers">
       <div class="user-section">
         <h2>Teachers</h2>
+
         <div class="search-section">
           <form action="" method="get">
             <input type="text" name="search_teacher" placeholder="Search" />
             <button type="submit">Search</button>
           </form>
         </div>
+
         <div>
           <table>
             <tr>
@@ -112,10 +116,10 @@
             </tr>
             {% for teacher in teachers %}
             <tr>
-              <td>{{ teacher.user.college_id }}</td>
-              <td>{{ teacher.user.username }}</td>
+              <td>{{teacher.user.college_id}}</td>
+              <td>{{teacher.user.username}}</td>
               <td>
-                <a href="{% url 'change_password' teacher.user.pk %}">
+                <a href="{% url 'change_password' teacher.user.pk  %}">
                   <button>Change Password</button>
                 </a>
                 <a href="{% url 'delete_user' teacher.user.pk %}">
@@ -129,15 +133,18 @@
       </div>
     </div>
 
-    <div class="staffs hidden">
+    <br /><br /><br /><br /><br />
+    <div class="staffs">
       <div class="user-section">
         <h2>Staffs</h2>
+
         <div class="search-section">
           <form action="" method="get">
             <input type="text" name="search_staff" placeholder="Search" />
             <button type="submit">Search</button>
           </form>
         </div>
+
         <div>
           <table>
             <tr>
@@ -147,10 +154,10 @@
             </tr>
             {% for staff in staffs %}
             <tr>
-              <td>{{ staff.user.college_id }}</td>
-              <td>{{ staff.user.username }}</td>
+              <td>{{staff.user.college_id}}</td>
+              <td>{{staff.user.username}}</td>
               <td>
-                <a href="{% url 'change_password' staff.user.pk %}">
+                <a href="{% url 'change_password' staff.user.pk  %}">
                   <button>Change Password</button>
                 </a>
                 <a href="{% url 'delete_user' staff.user.pk %}">
@@ -163,34 +170,5 @@
         </div>
       </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var userTypeSelectDropdown = document.getElementById('user_type_select');
-            var studentsSection = document.querySelector('.students');
-            var teachersSection = document.querySelector('.teachers');
-            var staffsSection = document.querySelector('.staffs');
-
-            function updateUserSectionVisibility() {
-                var selectedUserType = userTypeSelectDropdown.value;
-                studentsSection.classList.add('hidden');
-                teachersSection.classList.add('hidden');
-                staffsSection.classList.add('hidden');
-
-                if (selectedUserType === 'students') {
-                    studentsSection.classList.remove('hidden');
-                } else if (selectedUserType === 'teachers') {
-                    teachersSection.classList.remove('hidden');
-                } else if (selectedUserType === 'staffs') {
-                    staffsSection.classList.remove('hidden');
-                }
-            }
-
-            userTypeSelectDropdown.addEventListener('change', updateUserSectionVisibility);
-            updateUserSectionVisibility();
-        });
-    </script>
-  </div>
-</body>
-
+  </body>
 </html>

@@ -3,3 +3,5 @@ dockerrr.yml
 # *.sqlite3
 commands.txt
 .env
+.ruff_cache/
+celeryMQ.txt

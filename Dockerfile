@@ -10,15 +10,11 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    pkg-config \
-    build-essential \
+    &&pkg-config \
+    &&build-essential \
+    && pip install virtualenvwrapper poetry==1.4.2 \
     # libpq-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Python dependencies
-# COPY requirements.txt .
-# RUN pip install --upgrade pip
-# RUN pip install -r requirements.txt
 
 COPY ["poetry.lock", "pyproject.toml", "./"]
 RUN poetry install --no-root
@@ -31,5 +27,5 @@ COPY ./canteen/ .
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+COPY scripts/entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh

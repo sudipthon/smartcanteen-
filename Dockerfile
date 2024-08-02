@@ -10,18 +10,20 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-# Install Graphviz and its development files
-    graphviz \
-    libgraphviz-dev \
     pkg-config \
     build-essential \
-    libpq-dev \
+    # libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# COPY requirements.txt .
+# RUN pip install --upgrade pip
+# RUN pip install -r requirements.txt
+
+COPY ["poetry.lock", "pyproject.toml", "./"]
+RUN poetry install --no-root
+
+
 
 # Copy the Django project into the Docker image
 COPY ./canteen/ .

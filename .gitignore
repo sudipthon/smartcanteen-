@@ -2,3 +2,4 @@ venv/
 dockerrr.yml
 # *.sqlite3
 commands.txt
+.env

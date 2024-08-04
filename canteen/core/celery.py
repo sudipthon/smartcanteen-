@@ -29,7 +29,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 app = Celery("canteen", broker="amqp://celery:celery@rabbitmq:5672/celeryvhost")
 
 # Using a string here means the worker doesn't have to serialize
-# the configuration object to child processes.
+# the configuration object to child processes.c
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django app configs.

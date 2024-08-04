@@ -30,6 +30,10 @@ from .decorators import check_admin, check_staff, check_student_teacher
 import os
 import stat
 
+import logging
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 @login_required(login_url="login")
@@ -181,6 +185,9 @@ def add_users(request):
             fs = FileSystemStorage(location=custom_folder)
             file_name = fs.save(file.name, file)
             file_path = fs.path(file_name)
+            logger.info(f"\n\nFile uploaded at,saved path: {file_path}\n\n")
+            logger.info(f"\n\nFile uploaded at,accesed path: {file_name}\n\n")
+
             add_users_task.delay(file_path, user_type)
             return redirect("canteen_admin")
 

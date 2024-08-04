@@ -10,14 +10,15 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    &&pkg-config \
-    &&build-essential \
+    pkg-config \
+    build-essential \
     && pip install virtualenvwrapper poetry==1.4.2 \
     # libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ["poetry.lock", "pyproject.toml", "./"]
+COPY ["poetry.lock", "pyproject.toml","README.md", "./"]
 RUN poetry install --no-root
+RUN poetry add celery
 
 
 
@@ -27,5 +28,6 @@ COPY ./canteen/ .
 # Expose the port the app runs on
 EXPOSE 8000
 
-COPY scripts/entrypoint.sh /entrypoint.sh
-RUN chmod a+x /entrypoint.sh
+# COPY scripts/entrypoint.sh /entrypoint.sh
+# RUN chmod a+x /entrypoint.sh
+CMD ["sh", "-c", "poetry run python manage.py runserver 0.0.0.0:8000 & poetry run celery -A canteen worker --loglevel=info"]

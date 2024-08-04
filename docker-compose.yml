@@ -8,8 +8,8 @@ services:
       - "5673:5672" # Change host port to 5673 to avoid conflict
       - "15673:15672" # Change management UI port to 15673 to avoid conflict
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: celery
+      RABBITMQ_DEFAULT_PASS: celery
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     command: >
@@ -17,36 +17,27 @@ services:
       rabbitmq-server -detached;
       rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbitmq.pid;
       rabbitmqctl add_vhost celeryvhost;
-      rabbitmqctl add_user user password;
-      rabbitmqctl set_user_tags user administrator;
-      rabbitmqctl set_permissions -p celeryvhost user '.*' '.*' '.*';
+      rabbitmqctl add_user celery celery;
+      rabbitmqctl set_user_tags celery administrator;
+      rabbitmqctl set_permissions -p celeryvhost celery '.*' '.*' '.*';
       rabbitmqctl stop;
       rabbitmq-server"
 
-  celery:
-    build: .
-    command: celery -A core.canteen worker --loglevel=info
-    volumes:
-      - ./canteen:/app
-    depends_on:
-      - rabbitmq
-    environment:
-      - CELERY_BROKER_URL=amqp://user:password@rabbitmq:5672/celeryvhost
-    working_dir: /app/core
-
+ 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: poetry run python manage.py runserver 0.0.0.0:8000
     image: smart-canteen
-    volumes:
-      - ./canteen:/app
+    # volumes:
+    #   - ./canteen:/app
     ports:
       - "8000:8000"
     depends_on:
       - rabbitmq
-      - celery
     environment:
       - DEBUG=1
+    env_file:
+      - ./canteen/.env
 
 volumes:
   rabbitmq_data:

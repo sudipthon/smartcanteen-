@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    image: smart-canteen
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - DEBUG=1
+    env_file:
+      - ./canteen/.env
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  celery:
+    build: .
+    command: poetry run celery -A canteen worker --loglevel=info
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://guest@rabbitmq//
+
+volumes:
+  rabbitmq_data:

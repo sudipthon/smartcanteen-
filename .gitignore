@@ -5,3 +5,5 @@ commands.txt
 .env
 .ruff_cache/
 celeryMQ.txt
+docker-commands.txt
+/a

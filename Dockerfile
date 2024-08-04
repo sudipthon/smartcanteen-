@@ -30,4 +30,4 @@ EXPOSE 8000
 
 # COPY scripts/entrypoint.sh /entrypoint.sh
 # RUN chmod a+x /entrypoint.sh
-CMD ["sh", "-c", "poetry run python manage.py runserver 0.0.0.0:8000 & poetry run celery -A canteen worker --loglevel=info"]
+CMD ["sh", "-c", "poetry run python manage.py runserver 0.0.0.0:8000 & poetry run celery -A core worker --loglevel=info"]

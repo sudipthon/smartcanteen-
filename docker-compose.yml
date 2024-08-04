@@ -1,3 +1,6 @@
+
+
+
 version: '3.8'
 
 services:
@@ -23,21 +26,34 @@ services:
       rabbitmqctl stop;
       rabbitmq-server"
 
- 
   web:
     build: .
     command: poetry run python manage.py runserver 0.0.0.0:8000
     image: smart-canteen
-    # volumes:
-    #   - ./canteen:/app
+    volumes:
+      - media_data:/app/media/
+      - db_data:/app/db/
     ports:
       - "8000:8000"
     depends_on:
       - rabbitmq
     environment:
       - DEBUG=1
-    env_file:
-      - ./canteen/.env
+
+  celery:
+    # build: .
+    image: smart-canteen
+    # command: poetry run celery -A your_project worker --loglevel=info
+    volumes:
+      - media_data:/app/media/
+      - db_data:/app/db/
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://celery:celery@rabbitmq:5672/celeryvhost
+      - CELERY_RESULT_BACKEND=rpc://
 
 volumes:
   rabbitmq_data:
+  media_data:
+  db_data:

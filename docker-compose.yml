@@ -5,8 +5,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - "5673:5672" # Change host port to 5673 to avoid conflict
-      - "15673:15672" # Change management UI port to 15673 to avoid conflict
+      - "5673:5672" 
+      - "15673:15672" 
     environment:
       RABBITMQ_DEFAULT_USER: celery
       RABBITMQ_DEFAULT_PASS: celery

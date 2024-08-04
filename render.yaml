@@ -1,34 +1,50 @@
-version: '3.8'
-
 services:
-  web:
-    build: .
-    command: poetry run python manage.py runserver 0.0.0.0:8000
-    image: smart-canteen
-    ports:
-      - "8000:8000"
-    depends_on:
-      - rabbitmq
-    environment:
-      - DEBUG=1
-    env_file:
-      - ./canteen/.env
+  - name: rabbitmq
+    type: web
+    env: docker
+    docker:
+      image: rabbitmq:3-management
+      ports:
+        - name: rabbitmq
+          port: 5673
+          targetPort: 5672
+        - name: rabbitmq-management
+          port: 15673
+          targetPort: 15672
+      environment:
+        RABBITMQ_DEFAULT_USER: celery
+        RABBITMQ_DEFAULT_PASS: celery
+      volumes:
+        - name: rabbitmq_data
+          path: /var/lib/rabbitmq
+      command: >
+        /bin/bash -c "
+        rabbitmq-server -detached;
+        rabbitmqctl wait /var/lib/rabbitmq/mnesia/rabbitmq.pid;
+        rabbitmqctl add_vhost celeryvhost;
+        rabbitmqctl add_user celery celery;
+        rabbitmqctl set_user_tags celery administrator;
+        rabbitmqctl set_permissions -p celeryvhost celery '.*' '.*' '.*';
+        rabbitmqctl stop;
+        rabbitmq-server"
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-
-  celery:
-    build: .
-    command: poetry run celery -A canteen worker --loglevel=info
-    depends_on:
-      - rabbitmq
-    environment:
-      - CELERY_BROKER_URL=amqp://guest@rabbitmq//
+  - name: web
+    type: web
+    env: docker
+    docker:
+      build:
+        context: .
+      image: smart-canteen
+      command: poetry run python manage.py runserver 0.0.0.0:8000
+      ports:
+        - name: web
+          port: 8000
+          targetPort: 8000
+      depends_on:
+        - rabbitmq
+      environment:
+        - DEBUG=1
+      env_file: ./canteen/.env
 
 volumes:
-  rabbitmq_data:
+  - name: rabbitmq_data

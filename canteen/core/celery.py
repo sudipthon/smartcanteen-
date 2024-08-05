@@ -26,11 +26,10 @@ from celery import Celery
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
-app = Celery("canteen", broker="amqp://celery:celery@rabbitmq:5672/celeryvhost")
-
+app = Celery("canteen")
+app.config_from_object("django.conf:settings", namespace="CELERY")
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.c
-app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()

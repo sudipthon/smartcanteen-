@@ -6,4 +6,4 @@ commands.txt
 .ruff_cache/
 celeryMQ.txt
 docker-commands.txt
-/a
+/a.py

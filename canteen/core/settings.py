@@ -30,7 +30,7 @@ DEBUG = True
 AUTH_USER_MODEL = "base.CustomUser"
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://smartcanteen-cyij.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://smartcanteen-ni2a.onrender.com"]
 
 
 # Application definition

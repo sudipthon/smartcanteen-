@@ -43,7 +43,7 @@ services:
   celery:
     # build: .
     image: smart-canteen
-    # command: poetry run celery -A your_project worker --loglevel=info
+    command: poetry run celery -A core worker --loglevel=info
     volumes:
       - media_data:/app/media/
       - db_data:/app/db/
